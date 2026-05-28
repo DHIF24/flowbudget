@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net: Default Deny Catch-All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Strict validation for transaction entities
+    function isValidTransaction(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             (data.amount is int || data.amount is float) && data.amount >= 0 &&
+             (data.type == 'income' || data.type == 'expense') &&
+             data.category is string && data.category.size() <= 50 &&
+             data.date is timestamp &&
+             (!data.keys().hasAny(['note']) || (data.note is string && data.note.size() <= 1000));
+    }
+
+    // Strict validation for budget entities
+    function isValidBudget(data) {
+      return data.category is string && data.category.size() <= 50 &&
+             (data.limit is int || data.limit is float) && data.limit >= 0 &&
+             data.month is string && data.month.size() == 7;
+    }
+
+    // Strict validation for settings entities
+    function isValidSettings(data) {
+      return data.currency is string && data.currency.size() <= 10 &&
+             (data.savingsGoal is int || data.savingsGoal is float) && data.savingsGoal >= 0 &&
+             data.displayName is string && data.displayName.size() <= 100;
+    }
+
+    // 2. User Collection Rules
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+
+      // Transactions Subcollection
+      match /transactions/{transactionId} {
+        allow read, get, list: if isSignedIn() && request.auth.uid == userId;
+        allow delete: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() && request.auth.uid == userId && isValidId(transactionId) &&
+          isValidTransaction(request.resource.data) && (
+            (request.resource.data.keys().hasAll(['id', 'title', 'amount', 'type', 'category', 'date', 'note']) && request.resource.data.keys().size() == 7) ||
+            (request.resource.data.keys().hasAll(['id', 'title', 'amount', 'type', 'category', 'date']) && request.resource.data.keys().size() == 6)
+          );
+
+        allow update: if isSignedIn() && request.auth.uid == userId && isValidTransaction(request.resource.data) &&
+          request.resource.data.id == resource.data.id;
+      }
+
+      // Budgets Subcollection
+      match /budgets/{budgetId} {
+        allow read, get, list: if isSignedIn() && request.auth.uid == userId;
+        allow delete: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() && request.auth.uid == userId && isValidId(budgetId) &&
+          isValidBudget(request.resource.data) &&
+          request.resource.data.keys().hasAll(['category', 'limit', 'month']) &&
+          request.resource.data.keys().size() == 3;
+
+        allow update: if isSignedIn() && request.auth.uid == userId && isValidBudget(request.resource.data);
+      }
+
+      // Settings Subcollection (e.g. settingsDocId is usually "preferences")
+      match /settings/{settingsId} {
+        allow read, get, list: if isSignedIn() && request.auth.uid == userId;
+        allow delete: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() && request.auth.uid == userId && isValidId(settingsId) &&
+          isValidSettings(request.resource.data) &&
+          request.resource.data.keys().hasAll(['currency', 'savingsGoal', 'displayName']) &&
+          request.resource.data.keys().size() == 3;
+
+        allow update: if isSignedIn() && request.auth.uid == userId && isValidSettings(request.resource.data);
+      }
+    }
+  }
+}
