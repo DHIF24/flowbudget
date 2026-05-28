@@ -72,7 +72,7 @@ export default function Login() {
             <Sparkles className="h-7 w-7" />
           </div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            FlowBudget
+            Taba3 flousek
           </h2>
           <p className="text-sm text-slate-500 mt-1">
             Gérez vos finances personnelles en temps réel

@@ -159,24 +159,32 @@ export default function Settings() {
         </h2>
       </header>
 
-      {/* 1. Profile info section */}
+      {/* Profile Section - Editable */}
       <section className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center gap-2.5 mb-5 uppercase tracking-wider text-xs font-mono font-semibold text-slate-500 dark:text-zinc-400">
+          <User className="h-4 w-4 text-[#534AB7]" />
+          <span>Mon Profil</span>
+        </div>
+        
         <div className="flex flex-col sm:flex-row items-center gap-5">
           <div className="h-16 w-16 rounded-full bg-[#534AB7] text-white flex items-center justify-center text-lg font-bold shadow-md ring-4 ring-indigo-50 dark:ring-indigo-950/40 shrink-0">
             {getInitials()}
           </div>
           
-          <div className="text-center sm:text-left space-y-1 w-full min-w-0">
-            <h3 className="font-bold text-base text-slate-905 dark:text-zinc-100">
-              {settings.displayName || user?.displayName || 'Utilisateur'}
-            </h3>
-            <p className="text-xs text-slate-500 font-mono select-all">
-              ID: {user?.uid}
-            </p>
-            <div className="inline-flex items-center gap-1 px-3 py-1 bg-slate-50 dark:bg-zinc-950 border border-slate-150 dark:border-zinc-805 text-[10px] font-medium rounded-full text-slate-500 font-sans mt-2 select-all">
-              <span>E-mail:</span>
-              <span className="font-semibold text-slate-700 dark:text-zinc-350">{user?.email} (Lecture seule)</span>
+          <div className="text-center sm:text-left space-y-2 w-full min-w-0 flex-1">
+            <div>
+              <p className="text-xs text-slate-400 mb-1">Nom d'affichage</p>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Votre nom"
+                className="w-full sm:w-auto px-3 py-2 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm font-semibold text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-[#534AB7] focus:border-transparent"
+              />
             </div>
+            <p className="text-xs text-slate-500 font-mono">
+              {user?.email}
+            </p>
           </div>
         </div>
       </section>
@@ -189,15 +197,7 @@ export default function Settings() {
         </div>
 
         <form onSubmit={handleSavePreferences} className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Nom de profil"
-              id="sett-name"
-              placeholder="Amine"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-
+          <div>
             <Input
               label="Objectif d'épargne mensuel"
               id="sett-savings"

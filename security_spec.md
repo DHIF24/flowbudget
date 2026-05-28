@@ -1,9 +1,9 @@
-# Security Specification: FlowBudget
+# Security Specification: Taba3 flousek
 
 ## Data Invariants
 1. **UserId Isolation**: A user must only read and write documents in paths where the `{userId}` matches their `request.auth.uid`.
 2. **Transaction Integrity**: Transactions require a non-negative number for amount, a non-empty string for title, a type of either `income` or `expense`, and a valid timestamp.
-3. **Category Bounding**: Categories of transactions and budgets must restrict themselves to valid categories (food, transport, bills, entertainment, salary, other) with reasonable size parameters.
+3. **Category Bounding**: Categories of transactions and budgets must restrict themselves to valid categories (food, transport, bills, entertainment, salary, other, cafe, clothes) with reasonable size parameters.
 4. **Savings Goal Limits**: Savings goals in settings must be positive numbers.
 5. **No System Overwrite**: A user cannot modify or inject unexpected roles or fields on user documents.
 

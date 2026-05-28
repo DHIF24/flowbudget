@@ -7,6 +7,8 @@ import {
   Gamepad2, 
   Coins, 
   Layers,
+  Coffee,
+  Shirt,
   Calendar,
   Check
 } from 'lucide-react';
@@ -23,7 +25,9 @@ const IconMap = {
   Receipt,
   Gamepad2,
   Coins,
-  Layers
+  Layers,
+  Coffee,
+  Shirt
 };
 
 export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense' }) {

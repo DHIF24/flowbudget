@@ -49,6 +49,22 @@ export const CATEGORIES = {
     color: '#64748B', // Slate
     bgLight: 'bg-slate-50 dark:bg-slate-950/20',
     border: 'border-slate-200 dark:border-slate-800'
+  },
+  cafe: {
+    id: 'cafe',
+    name: 'Café',
+    icon: 'Coffee',
+    color: '#A0522D', // Brown
+    bgLight: 'bg-orange-50 dark:bg-orange-950/20',
+    border: 'border-orange-200 dark:border-orange-800'
+  },
+  clothes: {
+    id: 'clothes',
+    name: 'Vêtements',
+    icon: 'Shirt',
+    color: '#EC4899', // Pink
+    bgLight: 'bg-pink-50 dark:bg-pink-950/20',
+    border: 'border-pink-200 dark:border-pink-800'
   }
 };
 

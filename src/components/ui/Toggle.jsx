@@ -6,8 +6,8 @@ import React from 'react';
 export default function Toggle({
   value,
   onChange,
-  leftLabel = 'Dépense',
-  rightLabel = 'Revenu'
+  leftLabel = 'المصروف',
+  rightLabel = 'المدخول'
 }) {
   const isLeft = value === 'expense';
 

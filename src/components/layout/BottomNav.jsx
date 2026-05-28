@@ -11,7 +11,7 @@ export default function BottomNav() {
   const navItems = [
     { label: 'Accueil', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Stats', path: '/stats', icon: BarChart3 },
-    { label: 'Dépenses', path: '/categories', icon: PieChart },
+    { label: 'المصاريف', path: '/categories', icon: PieChart },
     { label: 'Réglages', path: '/settings', icon: Settings },
   ];
 

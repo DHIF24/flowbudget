@@ -23,7 +23,7 @@ export function exportCSV(transactions, currency = 'DT') {
       (t.title || '').replace(/"/g, '""'),
       t.amount || 0,
       currency,
-      t.type === 'income' ? 'Revenu' : 'Depense',
+      t.type === 'income' ? 'المدخول' : 'المصروف',
       t.category || 'autre',
       dateStr,
       (t.note || '').replace(/"/g, '""')
@@ -41,7 +41,7 @@ export function exportCSV(transactions, currency = 'DT') {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `flowbudget_transactions_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute('download', `taba3flousek_transactions_${new Date().toISOString().split('T')[0]}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

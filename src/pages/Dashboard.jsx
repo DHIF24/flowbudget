@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { 
   Plus, 
   Sparkles, 
-  PiggyBank, 
-  ChevronRight, 
+  ChevronRight,
   Activity, 
   Smile,
   ChevronDown
@@ -14,7 +13,6 @@ import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
 import BalanceCard from '../components/dashboard/BalanceCard';
 import TransactionItem from '../components/dashboard/TransactionItem';
-import ProgressBar from '../components/ui/ProgressBar';
 import AddTransactionModal from '../components/modals/AddTransactionModal';
 import MonthPicker from '../components/ui/MonthPicker';
 
@@ -143,63 +141,7 @@ export default function Dashboard() {
         onAddExpense={handleAddExpenseClick}
       />
 
-      {/* 3. Savings Progress Bar */}
-      {settings.savingsGoal > 0 && (
-        <section className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-805 shadow-sm space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-[#1D9E75]/10 text-[#1D9E75] dark:bg-[#1D9E75]/20 dark:text-teal-400 rounded-lg">
-                <PiggyBank className="h-4 w-4" />
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200">
-                  Objectif d'épargne
-                </span>
-                <span className="text-[10px] text-slate-400 block font-mono">
-                  Épargne actuelle: {formatCurrency(savings, settings.currency)}
-                </span>
-              </div>
-            </div>
-            <span className="text-xs font-bold text-slate-850 dark:text-zinc-100 font-mono">
-              Cible: {formatCurrency(settings.savingsGoal, settings.currency)}
-            </span>
-          </div>
-
-          <ProgressBar value={savingsPercent} type="savings" />
-          
-          <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-medium font-mono">
-            <span>{savingsPercent.toFixed(0)}% de l'objectif</span>
-            {savingsPercent >= 100 ? (
-              <span className="text-[#1D9E75] font-semibold">🎉 Objectif atteint!</span>
-            ) : (
-              <span>Reste: {formatCurrency(Math.max(0, settings.savingsGoal - savings), settings.currency)}</span>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* 4. Today's Expenses */}
-      <section className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-805 shadow-sm space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
-              <Activity className="h-4 w-4" />
-            </div>
-            <span className="text-sm font-semibold text-slate-800 dark:text-zinc-200">
-              Dépenses d'aujourd'hui
-            </span>
-          </div>
-          <span className="text-lg font-bold text-red-600 dark:text-red-400 font-mono">
-            {formatCurrency(activeTransactions.filter(tx => tx.type === 'expense' && tx.date === new Date().toISOString().split('T')[0]).reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0), settings.currency)}
-          </span>
-        </div>
-        
-        <p className="text-xs text-slate-500 dark:text-zinc-400 font-medium font-sans">
-          {activeTransactions.filter(tx => tx.type === 'expense' && tx.date === new Date().toISOString().split('T')[0]).length} transaction(s) enregistrée(s) aujourd'hui
-        </p>
-      </section>
-
-      {/* 5. Recent Transactions list (last 5 entries) */}
+      {/* 3. Recent Transactions list (last 5 entries) */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono">
@@ -221,7 +163,7 @@ export default function Dashboard() {
                 Aucune transaction ce mois-ci
               </p>
               <p className="text-xs text-slate-450 dark:text-zinc-500 mt-1 leading-relaxed">
-                Cliquez sur le bouton plus (+) pour ajouter vos premières dépenses ou vos premiers revenus !
+                Cliquez sur le bouton plus (+) pour ajouter مصروفاتك أو مدخولك الأول !
               </p>
             </div>
           </div>

@@ -3,11 +3,7 @@ import {
   ChevronLeft, 
   ChevronRight, 
   TrendingDown, 
-  Calendar, 
-  AlertCircle,
-  PiggyBank,
-  CheckCircle2,
-  AlertTriangle
+  CheckCircle2
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -124,8 +120,8 @@ export default function Stats() {
 
     return {
       month: label.replace('.', ''),
-      Revenus: incomeSum,
-      Dépenses: expenseSum
+      المدخول: incomeSum,
+      المصروف: expenseSum
     };
   });
 
@@ -138,32 +134,25 @@ export default function Stats() {
   return (
     <div className="space-y-6 pb-20 md:pb-6">
       
-      {/* Page Title & Month Navigation Selector */}
+      {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <span className="text-xs font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-widest font-mono">
-            Rapports Analytiques
-          </span>
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mt-0.5">
-            Statistiques & Analyses
-          </h2>
-        </div>
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          إحصائياتي
+        </h2>
 
-        {/* 1. Month selector with Arrows */}
-        <div className="flex items-center gap-1.5 self-start bg-white dark:bg-zinc-900 rounded-xl border border-slate-200/80 dark:border-zinc-800 p-1">
+        {/* Month Selector */}
+        <div className="flex items-center gap-1 self-start bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 p-1">
           <button
             onClick={handlePrevMonth}
             className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-lg text-slate-600 dark:text-zinc-300 transition"
-            title="Mois précédent"
           >
-            <ChevronLeft className="h-4.5 w-4.5" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
           
           <button
             type="button"
             onClick={() => setIsMonthPickerOpen(true)}
-            className="px-3 py-1 text-sm font-semibold text-slate-850 dark:text-zinc-250 hover:text-[#534AB7] dark:hover:text-indigo-400 capitalize transition select-none min-w-[100px] text-center font-sans focus:outline-none"
-            title="Choisir une période"
+            className="px-3 py-1 text-sm font-semibold text-slate-850 dark:text-zinc-200 capitalize min-w-[100px] text-center"
           >
             {getFrenchMonthLabel()}
           </button>
@@ -171,9 +160,8 @@ export default function Stats() {
           <button
             onClick={handleNextMonth}
             className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-850 rounded-lg text-slate-600 dark:text-zinc-300 transition"
-            title="Mois suivant"
           >
-            <ChevronRight className="h-4.5 w-4.5" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       </header>
@@ -181,30 +169,29 @@ export default function Stats() {
       {/* Grid: Charts elements */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* 2. Donut Chart: Expense breakdown */}
+        {/* Expense Distribution */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono mb-4">
-            Répartition des dépenses
+          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+            توزيع المصاريف
           </h3>
           
           {expenseData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center flex-1 py-12 text-center text-slate-400 dark:text-zinc-650">
-              <TrendingDown className="h-8 w-8 mb-2 opacity-55" />
-              <p className="text-xs font-medium">Aucune dépense enregistrée ce mois-ci</p>
+            <div className="flex flex-col items-center justify-center flex-1 py-12 text-center text-slate-400">
+              <TrendingDown className="h-8 w-8 mb-2 opacity-50" />
+              <p className="text-xs">لا توجد مصروفات</p>
             </div>
           ) : (
             <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-6">
-              {/* Pie Chart container */}
-              <div className="w-full max-w-[180px] h-[180px]">
+              <div className="w-full max-w-[160px] h-[160px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={expenseData}
-                      cx="55%"
+                      cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={4}
+                      innerRadius={50}
+                      outerRadius={70}
+                      paddingAngle={3}
                       dataKey="value"
                     >
                       {expenseData.map((entry, index) => (
@@ -212,27 +199,21 @@ export default function Stats() {
                       ))}
                     </Pie>
                     <Tooltip 
-                      formatter={(val) => [`${Number(val).toFixed(2)} ${settings.currency}`, 'Montant']}
-                      contentStyle={{ 
-                        borderRadius: '8px', 
-                        borderColor: '#e2e8f0',
-                        fontSize: '12px',
-                        fontFamily: 'sans-serif'
-                      }}
+                      formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
+                      contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
 
-              {/* Pie legend colors info */}
               <div className="flex-1 space-y-2 w-full">
                 {expenseData.map((e, idx) => (
                   <div key={idx} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: e.color }} />
-                      <span className="text-slate-600 dark:text-zinc-300 font-medium">{e.name}</span>
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: e.color }} />
+                      <span className="text-slate-600 dark:text-zinc-300">{e.name}</span>
                     </div>
-                    <span className="font-semibold text-slate-850 dark:text-zinc-100 font-mono">
+                    <span className="font-semibold text-slate-800 dark:text-zinc-100 font-mono">
                       {formatCurrency(e.value, settings.currency)}
                     </span>
                   </div>
@@ -242,163 +223,84 @@ export default function Stats() {
           )}
         </div>
 
-        {/* 3. Bar Chart: Monthly comparison */}
+        {/* Monthly Comparison */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono mb-4">
-            Comparatif sur 6 Mois
+          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+            آخر 6 أشهر
           </h3>
-          <div className="h-44 sm:h-52 w-full">
+          <div className="h-44 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyHistoryData} margin={{ top: 10, right: 10, left: -22, bottom: 0 }}>
+              <BarChart data={monthlyHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis 
                   dataKey="month" 
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }} 
+                  tick={{ fill: '#94a3b8', fontSize: 10 }} 
                   axisLine={false} 
                   tickLine={false} 
                 />
                 <YAxis 
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }} 
+                  tick={{ fill: '#94a3b8', fontSize: 10 }} 
                   axisLine={false} 
                   tickLine={false} 
                 />
                 <Tooltip 
                   formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
-                  contentStyle={{ 
-                    borderRadius: '8px', 
-                    fontSize: '11px',
-                    borderColor: '#e2e8f0'
-                  }}
+                  contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
                 />
-                <Legend 
-                  iconSize={8} 
-                  iconType="circle" 
-                  wrapperStyle={{ fontSize: '10px', fontFamily: 'sans-serif', paddingTop: '10px' }} 
-                />
-                <Bar dataKey="Revenus" fill="#1D9E75" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Dépenses" fill="#D85A30" radius={[4, 4, 0, 0]} />
+                <Legend iconSize={8} wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
+                <Bar dataKey="المدخول" fill="#1D9E75" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="المصروف" fill="#D85A30" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Grid: Biggest block and limits table */}
+      {/* Category Spending Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* 4. Category Table Summary */}
-        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden flex flex-col">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono mb-4">
-            Bilan des budgets par catégorie
+        {/* Category List */}
+        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+            المصاريف حسب الفئة
           </h3>
           
-          <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 font-mono font-bold uppercase">
-                  <th className="pb-2.5 font-medium">Catégorie</th>
-                  <th className="pb-2.5 font-medium text-right">Budget</th>
-                  <th className="pb-2.5 font-medium text-right">Dépensé</th>
-                  <th className="pb-2.5 font-medium text-right">Reste</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200/50 dark:divide-zinc-850">
-                {Object.values(categorySpending).map((cat) => {
-                  const remaining = cat.limit > 0 ? cat.limit - cat.spent : 0;
-                  const isExceeded = cat.limit > 0 && cat.spent > cat.limit;
-                  
-                  return (
-                    <tr key={cat.id} className="text-slate-700 dark:text-zinc-300">
-                      <td className="py-3 font-semibold flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: cat.color }} />
-                        {cat.name}
-                      </td>
-                      <td className="py-3 text-right font-mono">
-                        {cat.limit > 0 ? formatCurrency(cat.limit, settings.currency) : '-'}
-                      </td>
-                      <td className="py-3 text-right font-mono">
-                        {formatCurrency(cat.spent, settings.currency)}
-                      </td>
-                      <td className="py-3 text-right font-mono">
-                        {cat.limit > 0 ? (
-                          <span 
-                            className={`font-bold px-1.5 py-0.5 rounded
-                              ${isExceeded 
-                                ? 'text-[#D85A30] bg-orange-50 dark:bg-orange-950/20' 
-                                : 'text-[#1D9E75] bg-emerald-50 dark:bg-emerald-950/20'
-                              }
-                            `}
-                          >
-                            {formatCurrency(remaining, settings.currency)}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">-</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {Object.values(categorySpending).map((cat) => (
+              <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
+                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                <div className="min-w-0">
+                  <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
+                    {formatCurrency(cat.spent, settings.currency)}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* 5. Biggest Expense Card Highlight */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono mb-4">
-              Plus grosse dépense
-            </h3>
-            
-            {biggestExpense ? (
-              <div className="space-y-4">
-                <div className="bg-[#D85A30]/5 dark:bg-orange-950/10 p-4 border border-[#D85A30]/15 dark:border-orange-900/40 rounded-xl flex items-center gap-3">
-                  <div className="p-2 bg-[#D85A30] text-white rounded-lg shrink-0">
-                    <TrendingDown className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs uppercase font-mono font-semibold text-[#D85A30]">
-                      Alerte Somme
-                    </p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-zinc-100 tracking-tight font-mono select-all">
-                      {formatCurrency(biggestExpense.amount, settings.currency)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-450">Titre:</span>
-                    <span className="font-semibold text-slate-800 dark:text-zinc-250 truncate block max-w-[150px]">
-                      {biggestExpense.title}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-450">Date:</span>
-                    <span className="font-mono text-slate-800 dark:text-zinc-300">
-                      {formatDate(biggestExpense.date, 'dd MMMM yyyy')}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-450">Catégorie:</span>
-                    <span className="font-semibold text-slate-850 dark:text-zinc-200 capitalize">
-                      {biggestExpense.category}
-                    </span>
-                  </div>
-                </div>
+        {/* Biggest Expense */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+            أكبر مصروف
+          </h3>
+          
+          {biggestExpense ? (
+            <div className="space-y-3">
+              <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
+                {formatCurrency(biggestExpense.amount, settings.currency)}
               </div>
-            ) : (
-              <div className="text-center py-8 text-slate-400 dark:text-zinc-650 flex flex-col items-center justify-center">
-                <CheckCircle2 className="h-7 w-7 mb-2 text-[#1D9E75]/70" />
-                <p className="text-xs font-semibold">Aucune dépense relevée</p>
-                <p className="text-[10px] text-slate-400 dark:text-zinc-600 mt-1">Vous n'avez pas de dépenses enregistrées ce mois-ci !</p>
-              </div>
-            )}
-          </div>
-
-          {biggestExpense && (
-            <div className="mt-6 pt-3 border-t border-slate-150 dark:border-zinc-800/80 text-[10px] text-slate-450 dark:text-zinc-500 flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-orange-500 shrink-0" />
-              <span>Cette dépense représente un point d'optimisation potentiel pour votre budget de ce mois-ci.</span>
+              <p className="text-sm text-slate-600 dark:text-zinc-300 truncate">
+                {biggestExpense.title}
+              </p>
+              <p className="text-xs text-slate-400">
+                {formatDate(biggestExpense.date, 'dd MMMM yyyy')}
+              </p>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-slate-400">
+              <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p className="text-xs">لا توجد مصروفات</p>
             </div>
           )}
         </div>

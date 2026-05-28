@@ -6,6 +6,8 @@ import {
   Gamepad2, 
   Coins, 
   Layers,
+  Coffee,
+  Shirt,
   Trash2,
   Edit2
 } from 'lucide-react';
@@ -19,7 +21,9 @@ const IconMap = {
   Receipt,
   Gamepad2,
   Coins,
-  Layers
+  Layers,
+  Coffee,
+  Shirt
 };
 
 export default function TransactionItem({ 

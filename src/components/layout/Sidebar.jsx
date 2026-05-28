@@ -1,12 +1,13 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   BarChart3, 
   PieChart,
   Settings, 
   LogOut,
-  Sparkles
+  Sparkles,
+  User
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useBudget } from '../../context/BudgetContext';
@@ -14,11 +15,12 @@ import { useBudget } from '../../context/BudgetContext';
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const { settings } = useBudget();
+  const navigate = useNavigate();
 
   const navItems = [
     { label: 'Tableau de bord', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Statistiques', path: '/stats', icon: BarChart3 },
-    { label: 'Dépenses par catégorie', path: '/categories', icon: PieChart },
+    { label: 'المصاريف حسب الفئة', path: '/categories', icon: PieChart },
     { label: 'Paramètres', path: '/settings', icon: Settings },
   ];
 
@@ -41,7 +43,7 @@ export default function Sidebar() {
         </div>
         <div>
           <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 font-sans">
-            FlowBudget
+            Taba3 flousek
           </h1>
           <span className="text-xs text-slate-500 font-mono">FINANCES</span>
         </div>
@@ -70,21 +72,25 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User Information Profile footer */}
+      {/* User Profile - Clickable to edit */}
       <div className="pt-6 border-t border-slate-200 dark:border-zinc-800 flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#534AB7] flex items-center justify-center text-white text-xs font-semibold ring-2 ring-violet-100 dark:ring-violet-950">
+        <button
+          onClick={() => navigate('/settings')}
+          className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors text-left group"
+        >
+          <div className="h-10 w-10 rounded-full bg-[#534AB7] flex items-center justify-center text-white text-xs font-semibold ring-2 ring-violet-100 dark:ring-violet-950 group-hover:ring-[#534AB7]/30 transition-all">
             {getInitials()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate group-hover:text-[#534AB7] transition-colors">
               {settings.displayName || user?.displayName || 'Utilisateur'}
             </p>
             <p className="text-xs text-slate-500 truncate">
               {user?.email}
             </p>
           </div>
-        </div>
+          <User className="h-4 w-4 text-slate-400 group-hover:text-[#534AB7] transition-colors" />
+        </button>
 
         <button
           onClick={() => {

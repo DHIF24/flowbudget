@@ -34,7 +34,7 @@ export default function BalanceCard({
           onClick={onAddIncome}
           type="button"
           className="bg-white/10 hover:bg-white/15 active:scale-[0.98] rounded-xl p-3.5 flex items-center justify-between border border-white/10 shadow-sm transition-all text-left w-full group focus:outline-none"
-          title="Ajouter un revenu (+)"
+          title="إضافة مدخول (+)"
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 bg-teal-500/20 text-teal-300 rounded-lg shrink-0 group-hover:scale-105 transition-transform">
@@ -42,7 +42,7 @@ export default function BalanceCard({
             </div>
             <div className="min-w-0">
               <span className="text-xs text-[#E0DDF7] block font-semibold uppercase tracking-wider font-mono">
-                Revenus
+                المدخول
               </span>
               <span className="text-base font-bold text-white truncate block font-sans">
                 + {formatCurrency(totalIncome, currency)}
@@ -59,7 +59,7 @@ export default function BalanceCard({
           onClick={onAddExpense}
           type="button"
           className="bg-white/10 hover:bg-white/15 active:scale-[0.98] rounded-xl p-3.5 flex items-center justify-between border border-white/10 shadow-sm transition-all text-left w-full group focus:outline-none"
-          title="Ajouter une dépense (-)"
+          title="إضافة مصروف (-)"
         >
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 bg-red-500/20 text-red-300 rounded-lg shrink-0 group-hover:scale-105 transition-transform">
@@ -67,7 +67,7 @@ export default function BalanceCard({
             </div>
             <div className="min-w-0">
               <span className="text-xs text-[#E0DDF7] block font-semibold uppercase tracking-wider font-mono">
-                Dépenses
+                المصروف
               </span>
               <span className="text-base font-bold text-red-100 truncate block font-sans">
                 - {formatCurrency(totalExpense, currency)}
