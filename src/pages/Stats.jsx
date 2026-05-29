@@ -166,15 +166,62 @@ export default function Stats() {
         </div>
       </header>
 
-      {/* Grid: Charts elements */}
+      {/* 1. Biggest Expense First */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
+        <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+          أكبر مصروف
+        </h3>
+
+        {biggestExpense ? (
+          <div className="space-y-3">
+            <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
+              {formatCurrency(biggestExpense.amount, settings.currency)}
+            </div>
+            <p className="text-sm text-slate-600 dark:text-zinc-300 truncate">
+              {biggestExpense.title}
+            </p>
+            <p className="text-xs text-slate-400">
+              {formatDate(biggestExpense.date, 'dd MMMM yyyy')}
+            </p>
+          </div>
+        ) : (
+          <div className="text-center py-8 text-slate-400">
+            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p className="text-xs">لا توجد مصروفات</p>
+          </div>
+        )}
+      </div>
+
+      {/* 2. Category Spending Second */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
+        <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
+          المصاريف حسب الفئة
+        </h3>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Object.values(categorySpending).map((cat) => (
+            <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
+              <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+              <div className="min-w-0">
+                <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
+                  {formatCurrency(cat.spent, settings.currency)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Charts Section Last */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
+
         {/* Expense Distribution */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
           <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
             توزيع المصاريف
           </h3>
-          
+
           {expenseData.length === 0 ? (
             <div className="flex flex-col items-center justify-center flex-1 py-12 text-center text-slate-400">
               <TrendingDown className="h-8 w-8 mb-2 opacity-50" />
@@ -198,7 +245,7 @@ export default function Stats() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <Tooltip
                       formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
                       contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
                     />
@@ -231,18 +278,18 @@ export default function Stats() {
           <div className="h-44 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <XAxis 
-                  dataKey="month" 
-                  tick={{ fill: '#94a3b8', fontSize: 10 }} 
-                  axisLine={false} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: '#94a3b8', fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <YAxis 
-                  tick={{ fill: '#94a3b8', fontSize: 10 }} 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  tick={{ fill: '#94a3b8', fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
                   contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
                 />
@@ -253,58 +300,6 @@ export default function Stats() {
             </ResponsiveContainer>
           </div>
         </div>
-      </div>
-
-      {/* Category Spending Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Category List */}
-        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            المصاريف حسب الفئة
-          </h3>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {Object.values(categorySpending).map((cat) => (
-              <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
-                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-                <div className="min-w-0">
-                  <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
-                  <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
-                    {formatCurrency(cat.spent, settings.currency)}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Biggest Expense */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            أكبر مصروف
-          </h3>
-          
-          {biggestExpense ? (
-            <div className="space-y-3">
-              <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
-                {formatCurrency(biggestExpense.amount, settings.currency)}
-              </div>
-              <p className="text-sm text-slate-600 dark:text-zinc-300 truncate">
-                {biggestExpense.title}
-              </p>
-              <p className="text-xs text-slate-400">
-                {formatDate(biggestExpense.date, 'dd MMMM yyyy')}
-              </p>
-            </div>
-          ) : (
-            <div className="text-center py-8 text-slate-400">
-              <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs">لا توجد مصروفات</p>
-            </div>
-          )}
-        </div>
-
       </div>
 
       {/* MONTH/YEAR PICKER POPUP */}
