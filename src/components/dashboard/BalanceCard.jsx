@@ -23,7 +23,7 @@ export default function BalanceCard({
         <span>Solde disponible</span>
       </div>
 
-      <div className="text-4xl font-bold tracking-tight italic select-all mb-6">
+      <div className="text-3xl sm:text-4xl font-bold tracking-tight italic select-all mb-4 sm:mb-6">
         {formatCurrency(balance, currency)}
       </div>
 
@@ -44,7 +44,7 @@ export default function BalanceCard({
               <span className="text-xs text-[#E0DDF7] block font-semibold uppercase tracking-wider font-mono">
                 المدخول
               </span>
-              <span className="text-base font-bold text-white truncate block font-sans">
+              <span className="text-sm sm:text-base font-bold text-white truncate block font-sans">
                 + {formatCurrency(totalIncome, currency)}
               </span>
             </div>
@@ -69,7 +69,7 @@ export default function BalanceCard({
               <span className="text-xs text-[#E0DDF7] block font-semibold uppercase tracking-wider font-mono">
                 المصروف
               </span>
-              <span className="text-base font-bold text-red-100 truncate block font-sans">
+              <span className="text-sm sm:text-base font-bold text-red-100 truncate block font-sans">
                 - {formatCurrency(totalExpense, currency)}
               </span>
             </div>

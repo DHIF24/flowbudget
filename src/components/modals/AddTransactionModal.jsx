@@ -169,7 +169,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-lg bg-white dark:bg-zinc-900 rounded-t-2xl md:rounded-2xl shadow-xl z-55 flex flex-col overflow-hidden max-h-[92vh]"
+            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-lg bg-white dark:bg-zinc-900 rounded-t-2xl md:rounded-2xl shadow-xl z-50 flex flex-col overflow-hidden max-h-[85vh] md:max-h-[90vh]"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-zinc-800">
@@ -234,7 +234,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                 <label className="text-xs font-semibold text-slate-500 mb-2 block uppercase tracking-wider font-mono">
                   Sélecteur de Catégorie
                 </label>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {CATEGORY_LIST.map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
@@ -244,9 +244,9 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                         type="button"
                         onClick={() => setCategory(cat.id)}
                         className={`
-                          flex flex-col items-center justify-center p-3 rounded-xl border text-center relative transition-all duration-150 group
-                          ${isSelected 
-                            ? 'bg-slate-50 dark:bg-zinc-800 scale-[1.03] ring-2 ring-[#534AB7]/20 border-[#534AB7]' 
+                          flex flex-col items-center justify-center p-3 rounded-xl border text-center relative transition-all duration-150 group min-h-[70px] active:scale-95
+                          ${isSelected
+                            ? 'bg-slate-50 dark:bg-zinc-800 scale-[1.02] ring-2 ring-[#534AB7]/20 border-[#534AB7]'
                             : 'bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
                           }
                         `}

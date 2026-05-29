@@ -82,15 +82,15 @@ export default function TransactionItem({
           {isIncome ? '+' : '-'} {formatCurrency(amount, currency)}
         </span>
 
-        {/* Edit / Delete actions */}
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0">
+        {/* Edit / Delete actions - always visible on mobile, hover on desktop */}
+        <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-150 shrink-0">
           {onEdit && (
             <button
               onClick={() => onEdit(transaction)}
-              className="p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 transition"
+              className="p-2 sm:p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 transition active:scale-95"
               title="Modifier"
             >
-              <Edit2 className="h-3.5 w-3.5" />
+              <Edit2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
             </button>
           )}
           {onDelete && (
@@ -98,10 +98,10 @@ export default function TransactionItem({
               onClick={() => {
                 onDelete(transaction.id);
               }}
-              className="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg text-slate-400 hover:text-red-500 transition"
+              className="p-2 sm:p-1.5 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg text-slate-400 hover:text-red-500 transition active:scale-95"
               title="Supprimer"
             >
-              <Trash2 className="h-3.5 w-3.5" />
+              <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
             </button>
           )}
         </div>

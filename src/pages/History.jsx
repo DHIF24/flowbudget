@@ -240,9 +240,9 @@ export default function HistoryPage() {
                 <button
                   key={value}
                   onClick={() => setFilterType(value)}
-                  className={`flex-1 py-2.5 px-3 rounded-lg text-xs font-semibold transition-all ${
-                    filterType === value 
-                      ? color + ' ring-2 ring-offset-1 ring-[#534AB7]' 
+                  className={`flex-1 py-3 px-2 sm:py-2.5 sm:px-3 rounded-lg text-xs font-semibold transition-all active:scale-95 min-h-[44px] ${
+                    filterType === value
+                      ? color + ' ring-2 ring-offset-1 ring-[#534AB7]'
                       : 'bg-slate-50 dark:bg-zinc-950 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
                   }`}
                 >
@@ -368,10 +368,10 @@ export default function HistoryPage() {
                   {/* Delete Button */}
                   <button
                     onClick={() => handleDelete(tx)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                    className="p-3 sm:p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors active:scale-95"
                     title="Supprimer"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-5 w-5 sm:h-4 sm:w-4" />
                   </button>
                 </div>
               );
