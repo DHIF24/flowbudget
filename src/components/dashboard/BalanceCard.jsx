@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Plus } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 export default function BalanceCard({
@@ -35,18 +35,21 @@ export default function BalanceCard({
       {/* Income & Expense Cards */}
       <div className="grid grid-cols-2 gap-2">
         {/* Income - جبت */}
-        <button onClick={onAddIncome} className="bg-emerald-500/20 rounded-lg sm:rounded-xl p-2 sm:p-3 text-left">
+        <button onClick={onAddIncome} className="bg-emerald-500/20 rounded-lg sm:rounded-xl p-2 sm:p-3 text-left relative">
           <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
             <ArrowDownLeft className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-300" />
-            <span className="text-[9px] sm:text-xs text-emerald-200">جبت</span>
+            <span className="text-[9px] sm:text-xs text-emerald-200">دخلت</span>
           </div>
           <p className="text-xs sm:text-base font-bold text-emerald-100 truncate">
             + {formatCurrency(totalIncome, currency)}
           </p>
+          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 p-0.5 sm:p-1 bg-white/10 rounded">
+            <Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+          </div>
         </button>
 
         {/* Expense - صرفت */}
-        <button onClick={onAddExpense} className="bg-red-500/20 rounded-lg sm:rounded-xl p-2 sm:p-3 text-left">
+        <button onClick={onAddExpense} className="bg-red-500/20 rounded-lg sm:rounded-xl p-2 sm:p-3 text-left relative">
           <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
             <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 text-red-300" />
             <span className="text-[9px] sm:text-xs text-red-200">صرفت</span>
@@ -54,6 +57,9 @@ export default function BalanceCard({
           <p className="text-xs sm:text-base font-bold text-red-100 truncate">
             - {formatCurrency(totalExpense, currency)}
           </p>
+          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 p-0.5 sm:p-1 bg-white/10 rounded">
+            <Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+          </div>
         </button>
       </div>
     </div>
