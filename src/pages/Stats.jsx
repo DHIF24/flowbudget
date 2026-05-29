@@ -169,7 +169,7 @@ export default function Stats() {
       {/* 1. Biggest Expense First */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
         <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-          أكبر مصروف
+          اكتر مصروف صرفتو
         </h3>
 
         {biggestExpense ? (
