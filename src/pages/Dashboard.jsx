@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   Plus,
-  Sparkles,
   ChevronRight,
   Activity,
   Smile,
@@ -109,11 +108,6 @@ export default function Dashboard() {
       {/* 1. Header: App title, Avatar, Month label */}
       <header className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-1.5 text-slate-400 dark:text-zinc-500 font-medium text-xs uppercase tracking-widest font-mono">
-            <Sparkles className="h-3.5 w-3.5 text-[#534AB7]" />
-            <span>Flux de Trésorerie</span>
-          </div>
-          
           <button
             type="button"
             onClick={() => setIsMonthPickerOpen(true)}
