@@ -198,9 +198,9 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
               {/* Title & Amount (Grid for desktop) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
-                  label="Intitulé / Titre"
+                  label="شنوا صرفت فيه"
                   id="tx-title"
-                  placeholder="Ex: McDonald's, Courses Bio"
+                  placeholder="حط اسم الحاجة وين صرفت فلوسك"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   error={errors.title}
