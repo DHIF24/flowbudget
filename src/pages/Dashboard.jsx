@@ -103,8 +103,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 pb-20 md:pb-6 relative min-h-[85vh]">
-      
+    <div className="space-y-6 pb-6">
       {/* 1. Header: App title, Avatar, Month label */}
       <header className="flex items-center justify-between">
         <div>
@@ -113,15 +112,15 @@ export default function Dashboard() {
             <span>Flux de Trésorerie</span>
           </div>
           
-          <button 
+          <button
             type="button"
             onClick={() => setIsMonthPickerOpen(true)}
-            className="group flex items-center gap-2 hover:opacity-90 active:scale-98 transition-all duration-150 focus:outline-none text-left"
+            className="group flex items-center gap-2 hover:opacity-90 active:scale-95 transition focus:outline-none text-left"
             title="Changer de période"
           >
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mt-0.5 capitalize font-sans flex items-center gap-1">
               <span>{getFrenchMonthLabel()}</span>
-              <ChevronDown className="h-4.5 w-4.5 text-slate-400 dark:text-zinc-500 group-hover:text-[#534AB7] dark:group-hover:text-indigo-400 transition" />
+              <ChevronDown className="h-4 w-4 text-slate-400 dark:text-zinc-500 group-hover:text-[#534AB7] dark:group-hover:text-indigo-400 transition" />
             </h2>
           </button>
         </div>

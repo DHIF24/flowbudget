@@ -41,12 +41,11 @@ export default function TransactionItem({
   const isIncome = type === 'income';
 
   return (
-    <div className="flex items-center justify-between p-3.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-805 rounded-xl transition-all duration-150 group hover:border-slate-300 dark:hover:border-zinc-700 shadow-sm">
-      
+    <div className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl shadow-sm">
       {/* Transaction Icon & Text Info */}
-      <div className="flex items-center gap-3.5 min-w-0">
-        <div 
-          className="p-3 rounded-xl text-white shrink-0"
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          className="p-2.5 rounded-xl text-white shrink-0"
           style={{ backgroundColor: currentCategory.color }}
         >
           <IconComponent className="h-5 w-5" />
@@ -82,26 +81,24 @@ export default function TransactionItem({
           {isIncome ? '+' : '-'} {formatCurrency(amount, currency)}
         </span>
 
-        {/* Edit / Delete actions - always visible on mobile, hover on desktop */}
-        <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-150 shrink-0">
+        {/* Edit / Delete actions */}
+        <div className="flex items-center gap-1 shrink-0">
           {onEdit && (
             <button
               onClick={() => onEdit(transaction)}
-              className="p-2 sm:p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 transition active:scale-95"
+              className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200"
               title="Modifier"
             >
-              <Edit2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+              <Edit2 className="h-4 w-4" />
             </button>
           )}
           {onDelete && (
             <button
-              onClick={() => {
-                onDelete(transaction.id);
-              }}
-              className="p-2 sm:p-1.5 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg text-slate-400 hover:text-red-500 transition active:scale-95"
+              onClick={() => onDelete(transaction.id)}
+              className="p-2 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg text-slate-400 hover:text-red-500"
               title="Supprimer"
             >
-              <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+              <Trash2 className="h-4 w-4" />
             </button>
           )}
         </div>
