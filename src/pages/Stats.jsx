@@ -136,9 +136,12 @@ export default function Stats() {
       
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-          إحصائياتي
-        </h2>
+        <div>
+          <p className="text-xs text-slate-400 dark:text-zinc-500 mb-1">شوف فلوسك وين راحت</p>
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            حساباتي
+          </h2>
+        </div>
 
         {/* Month Selector */}
         <div className="flex items-center gap-1 self-start bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 p-1">
@@ -167,27 +170,27 @@ export default function Stats() {
       </header>
 
       {/* 1. Biggest Expense First */}
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
-        <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-          اكتر مصروف صرفتو
-        </h3>
+      <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-5 text-white shadow-lg">
+        <div className="flex items-center gap-2 mb-3">
+          <TrendingDown className="h-5 w-5" />
+          <h3 className="text-sm font-semibold">اكثر مصروف صرفتو 💸</h3>
+        </div>
 
         {biggestExpense ? (
-          <div className="space-y-3">
-            <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
+          <div className="space-y-2">
+            <div className="text-3xl font-bold font-mono">
               {formatCurrency(biggestExpense.amount, settings.currency)}
             </div>
-            <p className="text-sm text-slate-600 dark:text-zinc-300 truncate">
+            <p className="text-base font-medium opacity-95">
               {biggestExpense.title}
             </p>
-            <p className="text-xs text-slate-400">
-              {formatDate(biggestExpense.date, 'dd MMMM yyyy')}
+            <p className="text-xs opacity-75">
+              {formatDate(biggestExpense.date, 'dd/MM/yyyy')}
             </p>
           </div>
         ) : (
-          <div className="text-center py-8 text-slate-400">
-            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-xs">لا توجد مصروفات</p>
+          <div className="text-center py-6">
+            <p className="text-sm opacity-80">ما صرفت والو هذا الشهر 👍</p>
           </div>
         )}
       </div>
@@ -195,7 +198,7 @@ export default function Stats() {
       {/* 2. Category Spending Second */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
         <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-          المصاريف حسب الفئة
+          وين راحت الفلوس 📊
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -219,7 +222,7 @@ export default function Stats() {
         {/* Expense Distribution */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
           <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            توزيع المصاريف
+            الرسم الدائري 🥧
           </h3>
 
           {expenseData.length === 0 ? (
@@ -273,7 +276,7 @@ export default function Stats() {
         {/* Monthly Comparison */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
           <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            آخر 6 أشهر
+            تطورك السابق 📈
           </h3>
           <div className="h-44 w-full">
             <ResponsiveContainer width="100%" height="100%">
