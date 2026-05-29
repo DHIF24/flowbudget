@@ -75,7 +75,7 @@ export default function Register() {
             Créer un compte
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Rejoignez Taba3 flousek pour أتمتة مصروفاتك
+            taba3 flousek win mechya
           </p>
         </div>
 
