@@ -57,14 +57,6 @@ export default function Stats() {
     ? [...expenses].sort((a, b) => b.amount - a.amount)[0]
     : null;
 
-  // 3. Calculate Daily Average Expense
-  const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
-  const [currentYear, currentMonth] = activeMonth.split('-').map(Number);
-  const today = new Date();
-  const isCurrentMonth = today.getFullYear() === currentYear && (today.getMonth() + 1) === currentMonth;
-  const daysInMonth = isCurrentMonth ? today.getDate() : new Date(currentYear, currentMonth, 0).getDate();
-  const dailyAverage = daysInMonth > 0 ? totalExpense / daysInMonth : 0;
-
   return (
     <div className="space-y-6 pb-20 md:pb-6">
       
@@ -148,27 +140,6 @@ export default function Stats() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* 3. Daily Average Expense Indicator */}
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
-        <div className="flex items-center gap-2 mb-3">
-          <TrendingDown className="h-5 w-5 text-slate-500 dark:text-zinc-400" />
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400">
-            معدل مصروفك في النهار 📊
-          </h3>
-        </div>
-
-        <div className="flex items-baseline gap-2">
-          <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
-            {formatCurrency(dailyAverage, settings.currency)}
-          </div>
-          <span className="text-sm text-slate-400">في اليوم</span>
-        </div>
-
-        <p className="text-xs text-slate-400 mt-2">
-          على {daysInMonth} يوم في {getFrenchMonthLabel()}
-        </p>
       </div>
 
       {/* MONTH/YEAR PICKER POPUP */}
