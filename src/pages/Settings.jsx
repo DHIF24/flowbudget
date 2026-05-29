@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { 
-  User, 
-  Download, 
-  Trash2, 
-  LogOut, 
+import {
+  User,
+  LogOut,
   ShieldAlert,
   Lock,
   Eye,
@@ -12,17 +10,14 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBudget } from '../context/BudgetContext';
-import { exportCSV } from '../utils/exportCSV';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 
 export default function Settings() {
   const { user, logout, updatePassword } = useAuth();
-  const { 
-    settings, 
-    clearMonthData, 
-    transactions,
-    loading 
+  const {
+    settings,
+    loading
   } = useBudget();
 
   // Profile State
@@ -42,32 +37,6 @@ export default function Settings() {
     }
   }, [loading, settings]);
 
-
-  // CSV Exporter Action
-  const handleCSVExport = () => {
-    if (transactions.length === 0) {
-      toast.error('Aucune donnée à exporter.');
-      return;
-    }
-    toast.success('Génération du CSV...');
-    exportCSV(transactions, settings.currency);
-  };
-
-  // Month data clearing Action
-  const handleClearMonthData = async () => {
-    const isConfirmed = window.confirm(
-      '🚨 ÊTES-VOUS SÛR ? Cette action supprimera définitivement toutes les transactions et les budgets configurés pour le mois en cours.'
-    );
-    if (!isConfirmed) return;
-
-    toast.loading('Suppression en cours...', { id: 'clearing-data' });
-    try {
-      await clearMonthData();
-      toast.dismiss('clearing-data');
-    } catch (error) {
-      toast.dismiss('clearing-data');
-    }
-  };
 
   // Password change handler
   const handlePasswordChange = async (e) => {
@@ -263,52 +232,7 @@ export default function Settings() {
         </form>
       </section>
 
-      {/* 3. Data management module */}
-      <section className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <div className="uppercase tracking-wider text-xs font-mono font-semibold text-slate-500 dark:text-zinc-400">
-          Gestion des données
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* CSV Download */}
-          <button
-            onClick={handleCSVExport}
-            className="flex items-center gap-3 p-4 border border-slate-200 dark:border-zinc-855 rounded-xl text-left bg-slate-50/50 dark:bg-zinc-950/20 hover:bg-slate-100/60 dark:hover:bg-zinc-850/50 transition group"
-          >
-            <div className="p-2.5 bg-[#1D9E75]/10 text-[#1D9E75] dark:bg-[#1D9E75]/20 rounded-lg group-hover:scale-105 transition-transform duration-100 shrink-0">
-              <Download className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-slate-800 dark:text-zinc-250 block">
-                Exporter au format CSV
-              </span>
-              <span className="text-[10px] text-slate-450 dark:text-zinc-500 block leading-tight mt-0.5">
-                Sauvegardez vos transactions sur votre appareil
-              </span>
-            </div>
-          </button>
-
-          {/* Month Data Clear */}
-          <button
-            onClick={handleClearMonthData}
-            className="flex items-center gap-3 p-4 border border-slate-200 dark:border-zinc-855 rounded-xl text-left bg-slate-50/50 dark:bg-zinc-950/20 hover:bg-red-50/30 dark:hover:bg-red-950/10 transition group"
-          >
-            <div className="p-2.5 bg-orange-100 text-[#D85A30] dark:bg-orange-950/20 rounded-lg group-hover:scale-105 transition-transform duration-100 shrink-0">
-              <Trash2 className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-slate-800 dark:text-zinc-250 block">
-                Vider les données du mois
-              </span>
-              <span className="text-[10px] text-slate-450 dark:text-zinc-500 block leading-tight mt-0.5 animate-pulse">
-                Supprime tout pour le mois actif
-              </span>
-            </div>
-          </button>
-        </div>
-      </section>
-
-      {/* 4. Account controls module */}
+      {/* 3. Account controls module */}
       <section className="bg-red-50/20 dark:bg-red-950/5 border border-red-100 dark:border-red-955/20 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#D85A30] uppercase">
           <ShieldAlert className="h-4.5 w-4.5" />
