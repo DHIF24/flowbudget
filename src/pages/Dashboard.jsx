@@ -170,7 +170,7 @@ export default function Dashboard() {
                 Aucune transaction ce mois-ci
               </p>
               <p className="text-xs text-slate-450 dark:text-zinc-500 mt-1 leading-relaxed">
-                Cliquez sur le bouton plus (+) pour ajouter مصروفاتك أو مدخولك الأول !
+                Cliquez sur le bouton plus (+) pour ajouter مصروفك أو مدخولك الأول !
               </p>
             </div>
           </div>
