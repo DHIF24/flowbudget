@@ -4,6 +4,7 @@ import {
   LayoutDashboard, 
   BarChart3, 
   PieChart,
+  History,
   Settings, 
   LogOut,
   Sparkles,
@@ -21,6 +22,7 @@ export default function Sidebar() {
     { label: 'Tableau de bord', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Statistiques', path: '/stats', icon: BarChart3 },
     { label: 'المصاريف حسب الفئة', path: '/categories', icon: PieChart },
+    { label: 'Historique', path: '/history', icon: History },
     { label: 'Paramètres', path: '/settings', icon: Settings },
   ];
 

@@ -65,6 +65,14 @@ export const CATEGORIES = {
     color: '#EC4899', // Pink
     bgLight: 'bg-pink-50 dark:bg-pink-950/20',
     border: 'border-pink-200 dark:border-pink-800'
+  },
+  internet: {
+    id: 'internet',
+    name: 'Internet',
+    icon: 'Wifi',
+    color: '#06B6D4', // Cyan
+    bgLight: 'bg-cyan-50 dark:bg-cyan-950/20',
+    border: 'border-cyan-200 dark:border-cyan-800'
   }
 };
 

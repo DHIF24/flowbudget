@@ -12,6 +12,7 @@ import {
   Layers,
   Coffee,
   Shirt,
+  Wifi,
   ChevronDown
 } from 'lucide-react';
 
@@ -23,7 +24,8 @@ const iconMap = {
   Coins,
   Layers,
   Coffee,
-  Shirt
+  Shirt,
+  Wifi
 };
 
 export default function Categories() {
@@ -57,7 +59,7 @@ export default function Categories() {
   }
 
   // All category keys to display
-  const categoryKeys = ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'other'];
+  const categoryKeys = ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'internet', 'other'];
 
   return (
     <div className="space-y-6 pb-20 md:pb-6 relative min-h-[85vh]">

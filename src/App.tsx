@@ -22,6 +22,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Stats from './pages/Stats';
 import Categories from './pages/Categories';
+import History from './pages/History';
 import Settings from './pages/Settings';
 
 /**
@@ -44,13 +45,13 @@ function ProtectedRoute() {
 
   return (
     <BudgetProvider>
-      <div className="flex h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 overflow-hidden font-sans">
+      <div className="flex min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans">
         {/* Left Sidebar on Desktop */}
         <Sidebar />
 
         {/* Content Panel */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 max-w-5xl w-full mx-auto pb-24 md:pb-8">
+        <div className="flex-1 flex flex-col min-h-screen">
+          <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-5xl w-full mx-auto pb-24 md:pb-8">
             <Outlet />
           </main>
         </div>
@@ -84,6 +85,8 @@ function OpenRoute() {
 }
 
 export default function App() {
+  // Theme is initialized in index.html before React loads
+
   return (
     <Router>
       <AuthProvider>
@@ -115,6 +118,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
 

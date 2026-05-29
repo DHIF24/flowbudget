@@ -7,9 +7,10 @@ import {
   Trash2, 
   LogOut, 
   ShieldAlert,
-  Moon,
-  Sun,
-  Activity
+  Activity,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBudget } from '../context/BudgetContext';
@@ -18,7 +19,7 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 
 export default function Settings() {
-  const { user, logout } = useAuth();
+  const { user, logout, updatePassword } = useAuth();
   const { 
     settings, 
     updateUserSettings, 
@@ -32,10 +33,11 @@ export default function Settings() {
   const [currency, setCurrency] = useState('DT');
   const [savingsGoal, setSavingsGoal] = useState('');
 
-  // 2. Dark Mode Toggle State with direct DocumentElement bindings
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('theme') === 'dark' || document.documentElement.classList.contains('dark');
-  });
+  // 2. Password Change State
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPasswords, setShowPasswords] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   // Load Firestore settings values into form fields
   useEffect(() => {
@@ -46,16 +48,6 @@ export default function Settings() {
     }
   }, [loading, settings]);
 
-  // Handle Dark mode transformations on DOM
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
 
   const handleSavePreferences = async (e) => {
     e.preventDefault();
@@ -102,6 +94,33 @@ export default function Settings() {
       toast.dismiss('clearing-data');
     } catch (error) {
       toast.dismiss('clearing-data');
+    }
+  };
+
+  // Password change handler
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+
+    if (newPassword.length < 6) {
+      setPasswordError('Le nouveau mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Les mots de passe ne correspondent pas.');
+      return;
+    }
+
+    toast.loading('Mise à jour du mot de passe...', { id: 'password-change' });
+    try {
+      await updatePassword(newPassword);
+      toast.success('Mot de passe mis à jour avec succès !', { id: 'password-change' });
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      toast.dismiss('password-change');
+      setPasswordError(error.message || 'Erreur lors de la mise à jour du mot de passe.');
     }
   };
 
@@ -233,33 +252,58 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Dark Mode state triggers */}
-          <div className="flex items-center justify-between py-3 border-t border-b border-slate-50 dark:border-zinc-800/60 my-2">
-            <div>
-              <span className="text-sm font-semibold text-slate-800 dark:text-zinc-200 block">
-                Thème Sombre
-              </span>
-              <span className="text-[11px] text-slate-450 dark:text-zinc-500">
-                Basculer l'affichage pour reposer vos yeux
-              </span>
-            </div>
-            
+          <Button type="submit" className="w-full">
+            Enregistrer les préférences
+          </Button>
+        </form>
+      </section>
+
+      {/* Password Change Section */}
+      <section className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
+          <Lock className="w-5 h-5 text-[#534AB7]" />
+          <h2 className="uppercase tracking-wider text-xs font-mono font-semibold text-slate-500 dark:text-zinc-400">
+            Changer le mot de passe
+          </h2>
+        </div>
+
+        <form onSubmit={handlePasswordChange} className="space-y-3">
+          <div className="relative">
+            <Input
+              type={showPasswords ? 'text' : 'password'}
+              placeholder="Nouveau mot de passe"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              minLength={6}
+            />
+          </div>
+
+          <div className="relative">
+            <Input
+              type={showPasswords ? 'text' : 'password'}
+              placeholder="Confirmer le mot de passe"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+
+          {passwordError && (
+            <p className="text-sm text-red-500">{passwordError}</p>
+          )}
+
+          <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition shadow-sm"
-              title="Changer de thème"
+              onClick={() => setShowPasswords(!showPasswords)}
+              className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
             >
-              {darkMode ? (
-                <Sun className="h-5 w-5 text-amber-550" />
-              ) : (
-                <Moon className="h-5 w-5 text-[#534AB7]" />
-              )}
+              {showPasswords ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPasswords ? 'Masquer' : 'Afficher'}
             </button>
           </div>
 
-          <Button type="submit" className="w-full">
-            Enregistrer les préférences
+          <Button type="submit" className="w-full" disabled={!newPassword || !confirmPassword}>
+            Mettre à jour le mot de passe
           </Button>
         </form>
       </section>

@@ -26,13 +26,21 @@ export function BudgetProvider({ children }) {
   const { user } = useAuth();
   const userId = user?.uid;
 
-  // Selected calendar month (format "YYYY-MM")
-  const [activeMonth, setActiveMonth] = useState(() => {
+  // Selected calendar month (format "YYYY-MM") - load from localStorage or default to current month
+  const [activeMonth, setActiveMonthState] = useState(() => {
+    const saved = localStorage.getItem('activeMonth');
+    if (saved) return saved;
     const today = new Date();
     const y = today.getFullYear();
     const m = String(today.getMonth() + 1).padStart(2, '0');
     return `${y}-${m}`;
   });
+
+  // Wrapper to save to localStorage when month changes
+  const setActiveMonth = (month) => {
+    localStorage.setItem('activeMonth', month);
+    setActiveMonthState(month);
+  };
 
   // Load real-time data from core listeners
   const { transactions, loading: txLoading } = useTransactions(userId);
@@ -44,21 +52,74 @@ export function BudgetProvider({ children }) {
   // Refs to prevent duplicate notifications during initialization
   const isFirstLoad = useRef(true);
 
-  // Filter transactions of activeMonth
-  const activeTransactions = transactions.filter(t => {
-    let tDate;
-    if (t.date && typeof t.date.toDate === 'function') {
-      tDate = t.date.toDate();
-    } else if (t.date?.seconds !== undefined) {
-      tDate = new Date(t.date.seconds * 1000);
-    } else {
-      tDate = new Date(t.date);
-    }
-    if (isNaN(tDate.getTime())) return false;
-    const y = tDate.getFullYear();
-    const m = String(tDate.getMonth() + 1).padStart(2, '0');
-    return `${y}-${m}` === activeMonth;
-  });
+  // Filter transactions of activeMonth and sort by date descending
+  const activeTransactions = transactions
+    .filter(t => {
+      const getDate = (t) => {
+        if (!t || !t.date) return null;
+        
+        // Firestore Timestamp with toDate() method
+        if (typeof t.date.toDate === 'function') {
+          return t.date.toDate();
+        }
+        
+        // Firestore timestamp object { seconds, nanoseconds }
+        if (t.date.seconds !== undefined) {
+          return new Date(t.date.seconds * 1000 + Math.floor((t.date.nanoseconds || 0) / 1000000));
+        }
+        
+        // JavaScript Date object
+        if (t.date instanceof Date) {
+          return t.date;
+        }
+        
+        // String or number
+        const parsed = new Date(t.date);
+        return isNaN(parsed.getTime()) ? null : parsed;
+      };
+      
+      const tDate = getDate(t);
+      if (!tDate || isNaN(tDate.getTime())) return false;
+      
+      const y = tDate.getFullYear();
+      const m = String(tDate.getMonth() + 1).padStart(2, '0');
+      return `${y}-${m}` === activeMonth;
+    })
+    .sort((a, b) => {
+      const getTimestamp = (t) => {
+        if (!t || !t.date) return 0;
+        
+        // Firestore Timestamp with toDate() method
+        if (typeof t.date.toDate === 'function') {
+          return t.date.toDate().getTime();
+        }
+        
+        // Firestore timestamp object { seconds, nanoseconds }
+        if (t.date.seconds !== undefined) {
+          return t.date.seconds * 1000 + Math.floor((t.date.nanoseconds || 0) / 1000000);
+        }
+        
+        // JavaScript Date object
+        if (t.date instanceof Date) {
+          return t.date.getTime();
+        }
+        
+        // String or number timestamp
+        const parsed = new Date(t.date);
+        return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+      };
+      
+      const timeA = getTimestamp(a);
+      const timeB = getTimestamp(b);
+      
+      // Primary sort: date descending (newest first)
+      if (timeB !== timeA) {
+        return timeB - timeA;
+      }
+      
+      // Secondary sort: document ID descending (newer first)
+      return (b.id || '').localeCompare(a.id || '');
+    });
 
   // Calculate Balance Metrics for activeMonth
   const totalIncome = activeTransactions

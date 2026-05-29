@@ -26,16 +26,41 @@ export function useTransactions(userId) {
       });
 
       // Avoid Composite Index issues by doing immediate robust sorting client-side
+      // Sort by date descending (newest first), then by id descending (newest first)
       txList.sort((a, b) => {
-        const timeA = a.date && typeof a.date.toDate === 'function'
-          ? a.date.toDate().getTime()
-          : (a.date?.seconds ? a.date.seconds * 1000 : new Date(a.date).getTime());
-        
-        const timeB = b.date && typeof b.date.toDate === 'function'
-          ? b.date.toDate().getTime()
-          : (b.date?.seconds ? b.date.seconds * 1000 : new Date(b.date).getTime());
+        const getTimestamp = (t) => {
+          if (!t || !t.date) return 0;
           
-        return (timeB || 0) - (timeA || 0);
+          // Firestore Timestamp with toDate() method
+          if (typeof t.date.toDate === 'function') {
+            return t.date.toDate().getTime();
+          }
+          
+          // Firestore timestamp object { seconds, nanoseconds }
+          if (t.date.seconds !== undefined) {
+            return t.date.seconds * 1000 + Math.floor((t.date.nanoseconds || 0) / 1000000);
+          }
+          
+          // JavaScript Date object
+          if (t.date instanceof Date) {
+            return t.date.getTime();
+          }
+          
+          // String or number timestamp
+          const parsed = new Date(t.date);
+          return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+        };
+        
+        const timeA = getTimestamp(a);
+        const timeB = getTimestamp(b);
+        
+        // Primary sort: date descending (newest first)
+        if (timeB !== timeA) {
+          return timeB - timeA;
+        }
+        
+        // Secondary sort: document ID descending (newer first)
+        return (b.id || '').localeCompare(a.id || '');
       });
 
       setTransactions(txList);

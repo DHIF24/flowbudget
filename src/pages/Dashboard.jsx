@@ -141,11 +141,11 @@ export default function Dashboard() {
         onAddExpense={handleAddExpenseClick}
       />
 
-      {/* 3. Recent Transactions list (last 5 entries) */}
+      {/* 3. All Transactions sorted by date */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-mono">
-            Transactions récentes
+            Toutes les transactions
           </h3>
           <span className="text-xs font-bold font-mono text-slate-400">
             {activeTransactions.length} au total
@@ -169,7 +169,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="space-y-2.5">
-            {activeTransactions.slice(0, 5).map((tx) => (
+            {activeTransactions.map((tx) => (
               <TransactionItem
                 key={tx.id}
                 transaction={tx}

@@ -8,6 +8,7 @@ import {
   Layers,
   Coffee,
   Shirt,
+  Wifi,
   Trash2,
   Edit2
 } from 'lucide-react';
@@ -23,7 +24,8 @@ const IconMap = {
   Coins,
   Layers,
   Coffee,
-  Shirt
+  Shirt,
+  Wifi
 };
 
 export default function TransactionItem({ 

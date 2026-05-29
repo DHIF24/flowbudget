@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, updatePassword as firebaseUpdatePassword } from 'firebase/auth';
 import { doc, getDocFromServer } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 import { signUpUser, loginUser, loginWithGoogle, logoutUser } from '../firebase/auth';
@@ -44,13 +44,19 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
+  const updatePassword = async (newPassword) => {
+    if (!user) throw new Error('Utilisateur non connecté');
+    await firebaseUpdatePassword(user, newPassword);
+  };
+
   const value = {
     user,
     loading,
     register: signUpUser,
     login: loginUser,
     loginWithGoogle,
-    logout: logoutUser
+    logout: logoutUser,
+    updatePassword
   };
 
   return (

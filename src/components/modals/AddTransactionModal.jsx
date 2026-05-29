@@ -9,6 +9,7 @@ import {
   Layers,
   Coffee,
   Shirt,
+  Wifi,
   Calendar,
   Check
 } from 'lucide-react';
@@ -27,7 +28,8 @@ const IconMap = {
   Coins,
   Layers,
   Coffee,
-  Shirt
+  Shirt,
+  Wifi
 };
 
 export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense' }) {
@@ -64,12 +66,12 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
         setDate(formattedDate);
         setNote(transactionToEdit.note || '');
       } else {
-        // Defaults
+        // Defaults for NEW transaction - use today's date
         setType(defaultType);
         setTitle('');
         setAmount('');
         setCategory(defaultType === 'income' ? 'salary' : 'food');
-        setDate(new Date().toISOString().split('T')[0]);
+        setDate(new Date().toISOString().split('T')[0]); // Today
         setNote('');
       }
       setErrors({});
@@ -107,12 +109,18 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
     e.preventDefault();
     if (!handleValidation()) return;
 
+    // For new transactions, use current date/time so it appears at top
+    // For edits, keep the original date
+    const transactionDate = transactionToEdit 
+      ? new Date(date)
+      : new Date(); // Use current date/time
+
     const payload = {
       title: title.trim(),
       amount: Number(amount),
       type,
       category,
-      date: new Date(date),
+      date: transactionDate,
       note: note.trim() || null
     };
 
