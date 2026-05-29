@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { 
   User, 
-  Settings as SettingsIcon, 
   Download, 
   Trash2, 
   LogOut, 
   ShieldAlert,
-  Activity,
   Lock,
   Eye,
   EyeOff
@@ -22,16 +20,13 @@ export default function Settings() {
   const { user, logout, updatePassword } = useAuth();
   const { 
     settings, 
-    updateUserSettings, 
     clearMonthData, 
     transactions,
     loading 
   } = useBudget();
 
-  // 1. Profile & Preferences State
+  // Profile State
   const [displayName, setDisplayName] = useState('');
-  const [currency, setCurrency] = useState('DT');
-  const [savingsGoal, setSavingsGoal] = useState('');
 
   // 2. Password Change State
   const [newPassword, setNewPassword] = useState('');
@@ -39,37 +34,13 @@ export default function Settings() {
   const [showPasswords, setShowPasswords] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  // Load Firestore settings values into form fields
+  // Load display name from settings
   useEffect(() => {
     if (!loading && settings) {
       setDisplayName(settings.displayName || '');
-      setCurrency(settings.currency || 'DT');
-      setSavingsGoal(settings.savingsGoal || '');
     }
   }, [loading, settings]);
 
-
-  const handleSavePreferences = async (e) => {
-    e.preventDefault();
-    if (!displayName.trim()) {
-      toast.error("Le nom d'affichage ne peut pas être vide.");
-      return;
-    }
-    if (savingsGoal !== '' && (isNaN(savingsGoal) || Number(savingsGoal) < 0)) {
-      toast.error('Le montant d\'épargne cible doit être supérieur ou égal à 0.');
-      return;
-    }
-
-    try {
-      await updateUserSettings({
-        displayName: displayName.trim(),
-        currency,
-        savingsGoal: Number(savingsGoal) || 0
-      });
-    } catch (error) {
-      toast.error('Erreur lors de la mise à jour.');
-    }
-  };
 
   // CSV Exporter Action
   const handleCSVExport = () => {
@@ -190,7 +161,7 @@ export default function Settings() {
             {getInitials()}
           </div>
           
-          <div className="text-center sm:text-left space-y-2 w-full min-w-0 flex-1">
+          <div className="text-center sm:text-left space-y-3 w-full min-w-0 flex-1">
             <div>
               <p className="text-xs text-slate-400 mb-1">Nom d'affichage</p>
               <input
@@ -201,61 +172,23 @@ export default function Settings() {
                 className="w-full sm:w-auto px-3 py-2 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm font-semibold text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-[#534AB7] focus:border-transparent"
               />
             </div>
+            <button
+              onClick={() => {
+                if (!displayName.trim()) {
+                  toast.error("Le nom d'affichage ne peut pas être vide.");
+                  return;
+                }
+                toast.success('Nom enregistré !');
+              }}
+              className="px-4 py-2 bg-[#534AB7] text-white rounded-lg text-sm font-medium hover:bg-[#534AB7]/90 transition"
+            >
+              Enregistrer
+            </button>
             <p className="text-xs text-slate-500 font-mono">
               {user?.email}
             </p>
           </div>
         </div>
-      </section>
-
-      {/* 2. Preferences & Display Setting Form */}
-      <section className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center gap-2.5 mb-5 uppercase tracking-wider text-xs font-mono font-semibold text-slate-500 dark:text-zinc-400">
-          <SettingsIcon className="h-4.5 w-4.5 text-[#534AB7]" />
-          <span>Préférences de l'application</span>
-        </div>
-
-        <form onSubmit={handleSavePreferences} className="space-y-5">
-          <div>
-            <Input
-              label="Objectif d'épargne mensuel"
-              id="sett-savings"
-              type="number"
-              placeholder="200"
-              suffix={currency}
-              value={savingsGoal}
-              onChange={(e) => setSavingsGoal(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="text-xs font-medium text-slate-705 dark:text-zinc-300 block mb-1.5">
-              Sélection de la devise d'affichage
-            </label>
-            <div className="grid grid-cols-4 gap-2">
-              {['DT', 'EUR', 'USD', 'GBP'].map((curCode) => (
-                <button
-                  key={curCode}
-                  type="button"
-                  onClick={() => setCurrency(curCode)}
-                  className={`
-                    py-2 rounded-lg border text-xs font-bold font-mono transition-all duration-155
-                    ${currency === curCode
-                      ? 'bg-[#534AB7]/10 text-[#534AB7] border-[#534AB7]'
-                      : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800'
-                    }
-                  `}
-                >
-                  {curCode}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full">
-            Enregistrer les préférences
-          </Button>
-        </form>
       </section>
 
       {/* Password Change Section */}

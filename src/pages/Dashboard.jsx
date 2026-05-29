@@ -188,6 +188,7 @@ export default function Dashboard() {
         onClose={() => setIsModalOpen(false)}
         transactionToEdit={editingTransaction}
         defaultType={modalDefaultType}
+        activeMonth={activeMonth}
       />
 
       {/* MONTH/YEAR PICKER DIALOG POPUP */}

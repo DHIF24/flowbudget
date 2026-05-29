@@ -32,15 +32,26 @@ const IconMap = {
   Wifi
 };
 
-export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense' }) {
+export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense', activeMonth = null }) {
   const { addTransaction, removeTransaction, settings } = useBudget();
+  
+  // Helper to get default date based on activeMonth
+  const getDefaultDate = () => {
+    if (activeMonth) {
+      // Use today's date but in the activeMonth
+      const today = new Date();
+      const [year, month] = activeMonth.split('-');
+      return `${year}-${month}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+    return new Date().toISOString().split('T')[0];
+  };
   
   // State variables
   const [type, setType] = useState(defaultType);
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('food');
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => getDefaultDate());
   const [note, setNote] = useState('');
   
   const [errors, setErrors] = useState({});
@@ -54,7 +65,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
         setAmount(transactionToEdit.amount || '');
         setCategory(transactionToEdit.category || 'food');
         
-        let formattedDate = new Date().toISOString().split('T')[0];
+        let formattedDate = getDefaultDate();
         if (transactionToEdit.date) {
           const tDate = transactionToEdit.date.toDate 
             ? transactionToEdit.date.toDate() 
@@ -66,17 +77,17 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
         setDate(formattedDate);
         setNote(transactionToEdit.note || '');
       } else {
-        // Defaults for NEW transaction - use today's date
+        // Defaults for NEW transaction - use date from activeMonth
         setType(defaultType);
         setTitle('');
         setAmount('');
         setCategory(defaultType === 'income' ? 'salary' : 'food');
-        setDate(new Date().toISOString().split('T')[0]); // Today
+        setDate(getDefaultDate()); // Use activeMonth date
         setNote('');
       }
       setErrors({});
     }
-  }, [isOpen, transactionToEdit, defaultType]);
+  }, [isOpen, transactionToEdit, defaultType, activeMonth]);
 
   // Handle Type changes (auto-adjust appropriate category defaults)
   const handleTypeChange = (newType) => {
@@ -109,11 +120,18 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
     e.preventDefault();
     if (!handleValidation()) return;
 
-    // For new transactions, use current date/time so it appears at top
-    // For edits, keep the original date
-    const transactionDate = transactionToEdit 
-      ? new Date(date)
-      : new Date(); // Use current date/time
+    // Use the date from the form - this respects activeMonth selection
+    // Add current time (hours/minutes/seconds) so it appears at top of the list
+    const dateFromForm = new Date(date);
+    const now = new Date();
+    const transactionDate = new Date(
+      dateFromForm.getFullYear(),
+      dateFromForm.getMonth(),
+      dateFromForm.getDate(),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
+    );
 
     const payload = {
       title: title.trim(),
