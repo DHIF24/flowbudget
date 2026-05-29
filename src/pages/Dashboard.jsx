@@ -103,7 +103,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className="space-y-4 sm:space-y-6 pb-6 overflow-x-hidden">
       {/* 1. Header: App title, Avatar, Month label */}
       <header className="flex items-center justify-between">
         <div>

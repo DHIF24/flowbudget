@@ -45,13 +45,13 @@ function ProtectedRoute() {
 
   return (
     <BudgetProvider>
-      <div className="flex min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans">
+      <div className="flex min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans overflow-x-hidden">
         {/* Left Sidebar on Desktop */}
         <Sidebar />
 
         {/* Content Panel */}
         <div className="flex-1 flex flex-col min-h-screen">
-          <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 max-w-5xl w-full mx-auto pb-28 sm:pb-24 md:pb-8">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 max-w-5xl w-full mx-auto pb-28 sm:pb-24 md:pb-8 overflow-x-hidden">
             <Outlet />
           </main>
         </div>
