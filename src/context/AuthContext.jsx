@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, updatePassword as firebaseUpdatePassword } from 'firebase/auth';
+import { 
+  onAuthStateChanged, 
+  updatePassword as firebaseUpdatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
+} from 'firebase/auth';
 import { doc, getDocFromServer } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 import { signUpUser, loginUser, loginWithGoogle, logoutUser } from '../firebase/auth';
@@ -44,8 +49,17 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const updatePassword = async (newPassword) => {
+  const reauthenticate = async (currentPassword) => {
+    if (!user || !user.email) throw new Error('Utilisateur non connecté');
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+  };
+
+  const updatePassword = async (currentPassword, newPassword) => {
     if (!user) throw new Error('Utilisateur non connecté');
+    // First reauthenticate
+    await reauthenticate(currentPassword);
+    // Then update password
     await firebaseUpdatePassword(user, newPassword);
   };
 
@@ -56,7 +70,8 @@ export function AuthProvider({ children }) {
     login: loginUser,
     loginWithGoogle,
     logout: logoutUser,
-    updatePassword
+    updatePassword,
+    reauthenticate
   };
 
   return (

@@ -29,6 +29,7 @@ export default function Settings() {
   const [displayName, setDisplayName] = useState('');
 
   // 2. Password Change State
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
@@ -73,6 +74,11 @@ export default function Settings() {
     e.preventDefault();
     setPasswordError('');
 
+    if (!currentPassword) {
+      setPasswordError('Veuillez saisir votre mot de passe actuel.');
+      return;
+    }
+
     if (newPassword.length < 6) {
       setPasswordError('Le nouveau mot de passe doit contenir au moins 6 caractères.');
       return;
@@ -85,13 +91,20 @@ export default function Settings() {
 
     toast.loading('Mise à jour du mot de passe...', { id: 'password-change' });
     try {
-      await updatePassword(newPassword);
+      await updatePassword(currentPassword, newPassword);
       toast.success('Mot de passe mis à jour avec succès !', { id: 'password-change' });
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
       toast.dismiss('password-change');
-      setPasswordError(error.message || 'Erreur lors de la mise à jour du mot de passe.');
+      if (error.code === 'auth/wrong-password') {
+        setPasswordError('Mot de passe actuel incorrect.');
+      } else if (error.code === 'auth/requires-recent-login') {
+        setPasswordError('Pour des raisons de sécurité, veuillez vous déconnecter et vous reconnecter avant de changer votre mot de passe.');
+      } else {
+        setPasswordError(error.message || 'Erreur lors de la mise à jour du mot de passe.');
+      }
     }
   };
 
@@ -204,6 +217,15 @@ export default function Settings() {
           <div className="relative">
             <Input
               type={showPasswords ? 'text' : 'password'}
+              placeholder="Mot de passe actuel"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="relative">
+            <Input
+              type={showPasswords ? 'text' : 'password'}
               placeholder="Nouveau mot de passe"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
@@ -235,7 +257,7 @@ export default function Settings() {
             </button>
           </div>
 
-          <Button type="submit" className="w-full" disabled={!newPassword || !confirmPassword}>
+          <Button type="submit" className="w-full" disabled={!currentPassword || !newPassword || !confirmPassword}>
             Mettre à jour le mot de passe
           </Button>
         </form>
