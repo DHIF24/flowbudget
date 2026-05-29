@@ -1,22 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  TrendingDown, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  TrendingDown,
   CheckCircle2
 } from 'lucide-react';
-import { 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  Legend 
-} from 'recharts';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
@@ -63,73 +51,19 @@ export default function Stats() {
     return formatDate(date, 'MMMM yyyy');
   };
 
-  // 2. Prepare Donut Chart Data (Expenses only)
-  const expenseData = Object.values(categorySpending)
-    .filter(c => c.spent > 0)
-    .map(c => ({
-      name: c.name,
-      value: c.spent,
-      color: c.color
-    }));
-
-  // 3. Prepare Last 6 Months Comparison Data
-  const get6MonthsArray = () => {
-    const list = [];
-    const [yr, mth] = activeMonth.split('-').map(Number);
-    for (let i = 5; i >= 0; i--) {
-      let targetMonth = mth - i;
-      let targetYear = yr;
-      if (targetMonth <= 0) {
-        targetMonth = 12 + targetMonth;
-        targetYear = yr - 1;
-      }
-      list.push(`${targetYear}-${String(targetMonth).padStart(2, '0')}`);
-    }
-    return list;
-  };
-
-  const monthlyHistoryData = get6MonthsArray().map(mStr => {
-    // Find transactions of this specific month in the loaded array
-    const monthTx = transactions.filter(t => {
-      let tDate;
-      if (t.date && typeof t.date.toDate === 'function') {
-        tDate = t.date.toDate();
-      } else if (t.date?.seconds !== undefined) {
-        tDate = new Date(t.date.seconds * 1000);
-      } else {
-        tDate = new Date(t.date);
-      }
-      if (isNaN(tDate.getTime())) return false;
-      const y = tDate.getFullYear();
-      const m = String(tDate.getMonth() + 1).padStart(2, '0');
-      return `${y}-${m}` === mStr;
-    });
-
-    const incomeSum = monthTx
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
-
-    const expenseSum = monthTx
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
-
-    // Get localized French short month label (e.g., "Janv.", "Févr.")
-    const [yearVal, monthVal] = mStr.split('-');
-    const dummyDate = new Date(yearVal, monthVal - 1, 15);
-    const label = dummyDate.toLocaleDateString('fr-FR', { month: 'short' });
-
-    return {
-      month: label.replace('.', ''),
-      المدخول: incomeSum,
-      المصروف: expenseSum
-    };
-  });
-
-  // 4. Find Greatest Expense of the Active Month
+  // 2. Find Greatest Expense of the Active Month
   const expenses = activeTransactions.filter(t => t.type === 'expense');
   const biggestExpense = expenses.length > 0
     ? [...expenses].sort((a, b) => b.amount - a.amount)[0]
     : null;
+
+  // 3. Calculate Daily Average Expense
+  const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
+  const [currentYear, currentMonth] = activeMonth.split('-').map(Number);
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === currentYear && (today.getMonth() + 1) === currentMonth;
+  const daysInMonth = isCurrentMonth ? today.getDate() : new Date(currentYear, currentMonth, 0).getDate();
+  const dailyAverage = daysInMonth > 0 ? totalExpense / daysInMonth : 0;
 
   return (
     <div className="space-y-6 pb-20 md:pb-6">
@@ -216,93 +150,25 @@ export default function Stats() {
         </div>
       </div>
 
-      {/* 3. Charts Section Last */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Expense Distribution */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            الرسم الدائري 🥧
+      {/* 3. Daily Average Expense Indicator */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <TrendingDown className="h-5 w-5 text-slate-500 dark:text-zinc-400" />
+          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400">
+            معدل مصروفك في النهار 📊
           </h3>
-
-          {expenseData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center flex-1 py-12 text-center text-slate-400">
-              <TrendingDown className="h-8 w-8 mb-2 opacity-50" />
-              <p className="text-xs">لا توجد مصروفات</p>
-            </div>
-          ) : (
-            <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-6">
-              <div className="w-full max-w-[160px] h-[160px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={expenseData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={70}
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {expenseData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
-                      contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="flex-1 space-y-2 w-full">
-                {expenseData.map((e, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: e.color }} />
-                      <span className="text-slate-600 dark:text-zinc-300">{e.name}</span>
-                    </div>
-                    <span className="font-semibold text-slate-800 dark:text-zinc-100 font-mono">
-                      {formatCurrency(e.value, settings.currency)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Monthly Comparison */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-            تطورك السابق 📈
-          </h3>
-          <div className="h-44 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <XAxis
-                  dataKey="month"
-                  tick={{ fill: '#94a3b8', fontSize: 10 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fill: '#94a3b8', fontSize: 10 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(val) => [`${Number(val).toFixed(0)} ${settings.currency}`, '']}
-                  contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
-                />
-                <Legend iconSize={8} wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
-                <Bar dataKey="المدخول" fill="#1D9E75" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="المصروف" fill="#D85A30" radius={[3, 3, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+        <div className="flex items-baseline gap-2">
+          <div className="text-3xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
+            {formatCurrency(dailyAverage, settings.currency)}
           </div>
+          <span className="text-sm text-slate-400">في اليوم</span>
         </div>
+
+        <p className="text-xs text-slate-400 mt-2">
+          على {daysInMonth} يوم في {getFrenchMonthLabel()}
+        </p>
       </div>
 
       {/* MONTH/YEAR PICKER POPUP */}
