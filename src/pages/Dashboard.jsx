@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  Plus, 
-  Sparkles, 
+import { NavLink } from 'react-router-dom';
+import {
+  Plus,
+  Sparkles,
   ChevronRight,
-  Activity, 
+  Activity,
   Smile,
-  ChevronDown
+  ChevronDown,
+  Settings
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBudget } from '../context/BudgetContext';
@@ -125,10 +127,15 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* User avatar initials circle */}
-        <div className="h-10 w-10 rounded-full bg-[#534AB7] text-white flex items-center justify-center text-xs font-semibold ring-2 ring-indigo-50 dark:ring-indigo-950">
+        {/* User avatar initials circle - clickable to settings */}
+        <NavLink
+          to="/settings"
+          className="h-10 w-10 rounded-full bg-[#534AB7] text-white flex items-center justify-center text-xs font-semibold ring-2 ring-indigo-50 dark:ring-indigo-950 hover:bg-[#433b9b] transition-colors relative group"
+          title="Réglages"
+        >
           {getInitials()}
-        </div>
+          <Settings className="h-3 w-3 absolute -bottom-0.5 -right-0.5 bg-white dark:bg-zinc-900 text-[#534AB7] rounded-full p-0.5 ring-1 ring-slate-200 dark:ring-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </NavLink>
       </header>
 
       {/* Friendly tagline */}
