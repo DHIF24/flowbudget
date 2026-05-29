@@ -200,7 +200,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                 <Input
                   label="Intitulé / Titre"
                   id="tx-title"
-                  placeholder="Ex: McDonald's, Courses Bio"
+                  placeholder="اسم المصروف او المدخول"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   error={errors.title}
