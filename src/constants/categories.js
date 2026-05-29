@@ -4,7 +4,7 @@
 export const CATEGORIES = {
   food: {
     id: 'food',
-    name: 'Alimentation',
+    name: 'Mekla',
     icon: 'Utensils',
     color: '#D85A30', // Coral
     bgLight: 'bg-amber-50 dark:bg-amber-950/20',
