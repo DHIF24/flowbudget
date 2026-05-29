@@ -131,11 +131,18 @@ export default function Dashboard() {
         </div>
       </header>
 
+      {/* Friendly tagline */}
+      <div className="text-center">
+        <p className="text-slate-600 dark:text-zinc-400 text-sm sm:text-base">
+          فلوسك في إيدك — <span className="text-[#534AB7] font-semibold">تعرف وين تمشي</span> 💸
+        </p>
+      </div>
+
       {/* 2. Balance Card (purple background with interactive action buttons) */}
-      <BalanceCard 
-        totalIncome={totalIncome} 
-        totalExpense={totalExpense} 
-        currency={settings.currency} 
+      <BalanceCard
+        totalIncome={totalIncome}
+        totalExpense={totalExpense}
+        currency={settings.currency}
         onAddIncome={handleAddIncomeClick}
         onAddExpense={handleAddExpenseClick}
       />
