@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowDownLeft, ArrowUpRight, Plus } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { FormattedCurrency } from '../ui/FormattedCurrency';
 
 export default function BalanceCard({
   totalIncome = 0,
@@ -18,7 +19,7 @@ export default function BalanceCard({
       <div className="text-center mb-3 sm:mb-4">
         <p className="text-[#E0DDF7] text-[10px] sm:text-sm mb-1">شنوا فضلت</p>
         <div className={`text-xl sm:text-4xl font-bold ${isPositive ? 'text-white' : 'text-red-200'}`}>
-          {formatCurrency(balance, currency, 3)}
+          <FormattedCurrency amount={balance} currencyCode={currency} decimalPlaces={3} className="text-xl sm:text-4xl font-bold" />
         </div>
       </div>
 
@@ -41,7 +42,7 @@ export default function BalanceCard({
             <span className="text-xs sm:text-sm text-emerald-200 font-medium">دخلت</span>
           </div>
           <p className="text-xs sm:text-base font-bold text-emerald-100 truncate">
-            + {formatCurrency(totalIncome, currency, 3)}
+            + <FormattedCurrency amount={totalIncome} currencyCode={currency} decimalPlaces={3} className="text-xs sm:text-base font-bold" />
           </p>
           <div className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 sm:p-1.5 bg-white/20 rounded-md sm:rounded-lg">
             <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
@@ -55,7 +56,7 @@ export default function BalanceCard({
             <span className="text-xs sm:text-sm text-red-200 font-medium">صرفت</span>
           </div>
           <p className="text-xs sm:text-base font-bold text-red-100 truncate">
-            - {formatCurrency(totalExpense, currency, 3)}
+            - <FormattedCurrency amount={totalExpense} currencyCode={currency} decimalPlaces={3} className="text-xs sm:text-base font-bold" />
           </p>
           <div className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 sm:p-1.5 bg-white/20 rounded-md sm:rounded-lg">
             <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-white" />

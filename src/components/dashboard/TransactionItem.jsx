@@ -17,6 +17,7 @@ import { useBudget } from '../../context/BudgetContext';
 import { CATEGORIES } from '../../constants/categories';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
+import { FormattedCurrency } from '../ui/FormattedCurrency';
 
 const IconMap = {
   Utensils,
@@ -75,7 +76,7 @@ export default function TransactionItem({
           ${isIncome ? 'text-[#1D9E75]' : 'text-[#D85A30]'}
         `}
       >
-        {isIncome ? '+' : '-'} {formatCurrency(amount, currency, 3)}
+        {isIncome ? '+' : '-'} <FormattedCurrency amount={amount} currencyCode={currency} decimalPlaces={3} className="text-xs sm:text-sm font-bold" />
       </span>
 
       {/* Actions - compact */}

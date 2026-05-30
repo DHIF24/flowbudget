@@ -6,6 +6,7 @@ import { CATEGORIES } from '../constants/categories';
 import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
 import { exportCSV } from '../utils/exportCSV';
+import { FormattedCurrency } from '../components/ui/FormattedCurrency';
 import toast from 'react-hot-toast';
 import MonthPicker from '../components/ui/MonthPicker';
 
@@ -259,7 +260,7 @@ export default function HistoryPage() {
             <div className="text-center p-2 sm:p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
               <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium uppercase truncate">المدخول</p>
               <p className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400 font-mono mt-0.5 truncate">
-                {formatCurrency(totals.income, settings.currency)}
+                <FormattedCurrency amount={totals.income} currencyCode={settings.currency} decimalPlaces={3} className="text-xs sm:text-sm font-bold" />
               </p>
             </div>
           )}
@@ -267,7 +268,7 @@ export default function HistoryPage() {
             <div className="text-center p-2 sm:p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
               <p className="text-[10px] text-orange-600 dark:text-orange-400 font-medium uppercase truncate">المصروف</p>
               <p className="text-xs sm:text-sm font-bold text-orange-700 dark:text-orange-400 font-mono mt-0.5 truncate">
-                {formatCurrency(totals.expense, settings.currency)}
+                <FormattedCurrency amount={totals.expense} currencyCode={settings.currency} decimalPlaces={3} className="text-xs sm:text-sm font-bold" />
               </p>
             </div>
           )}
@@ -277,7 +278,7 @@ export default function HistoryPage() {
               <p className={`text-xs sm:text-sm font-bold font-mono mt-0.5 truncate ${
                 totals.balance >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-600 dark:text-red-400'
               }`}>
-                {formatCurrency(totals.balance, settings.currency)}
+                <FormattedCurrency amount={totals.balance} currencyCode={settings.currency} decimalPlaces={3} className="text-xs sm:text-sm font-bold" />
               </p>
             </div>
           )}
@@ -347,7 +348,7 @@ export default function HistoryPage() {
                   <span className={`text-xs sm:text-sm font-bold font-mono whitespace-nowrap shrink-0 ${
                     isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-zinc-100'
                   }`}>
-                    {isIncome ? '+' : '-'}{formatCurrency(tx.amount, settings.currency)}
+                    {isIncome ? '+' : '-'}<FormattedCurrency amount={tx.amount} currencyCode={settings.currency} decimalPlaces={3} className="text-xs sm:text-sm font-bold" />
                   </span>
 
                   {/* Delete Button */}
