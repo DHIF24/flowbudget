@@ -105,7 +105,7 @@ export default function Stats() {
         {biggestExpense ? (
           <div className="space-y-2">
             <div className="text-3xl font-bold font-mono">
-              {formatCurrency(biggestExpense.amount, settings.currency)}
+              {formatCurrency(biggestExpense.amount, settings.currency, 0)}
             </div>
             <p className="text-base font-medium opacity-95">
               {biggestExpense.title}
@@ -136,7 +136,7 @@ export default function Stats() {
                 <div className="min-w-0">
                   <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
                   <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
-                    {formatCurrency(cat.spent, settings.currency)}
+                    {formatCurrency(cat.spent, settings.currency, 0)}
                   </p>
                 </div>
               </div>

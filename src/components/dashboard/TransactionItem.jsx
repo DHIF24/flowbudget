@@ -75,7 +75,7 @@ export default function TransactionItem({
           ${isIncome ? 'text-[#1D9E75]' : 'text-[#D85A30]'}
         `}
       >
-        {isIncome ? '+' : '-'} {formatCurrency(amount, currency)}
+        {isIncome ? '+' : '-'} {formatCurrency(amount, currency, 3)}
       </span>
 
       {/* Actions - compact */}
