@@ -43,8 +43,8 @@ export default function BalanceCard({
           <p className="text-xs sm:text-base font-bold text-emerald-100 truncate">
             + {formatCurrency(totalIncome, currency)}
           </p>
-          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 p-0.5 sm:p-1 bg-white/10 rounded">
-            <Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 sm:p-1.5 bg-white/20 rounded-md sm:rounded-lg">
+            <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
         </button>
 
@@ -57,8 +57,8 @@ export default function BalanceCard({
           <p className="text-xs sm:text-base font-bold text-red-100 truncate">
             - {formatCurrency(totalExpense, currency)}
           </p>
-          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 p-0.5 sm:p-1 bg-white/10 rounded">
-            <Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 sm:p-1.5 bg-white/20 rounded-md sm:rounded-lg">
+            <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
         </button>
       </div>
