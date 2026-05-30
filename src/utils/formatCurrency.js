@@ -6,8 +6,8 @@
  */
 export function formatCurrency(amount, currencyCode = 'DT') {
   const value = Number(amount || 0).toLocaleString('fr-FR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 
   switch (currencyCode) {
