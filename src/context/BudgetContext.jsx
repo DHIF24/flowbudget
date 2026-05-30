@@ -138,17 +138,27 @@ export function BudgetProvider({ children }) {
     return found ? Number(found.limit || 0) : 0;
   };
 
+  // Merge built-in categories with custom categories from settings
+  const customCategories = settings?.customCategories || [];
+  const allCategories = {
+    ...CATEGORIES,
+    ...customCategories.reduce((acc, cat) => {
+      acc[cat.id] = cat;
+      return acc;
+    }, {})
+  };
+
   // Category summary for spending bars
-  const categorySpending = Object.keys(CATEGORIES).reduce((summary, key) => {
+  const categorySpending = Object.keys(allCategories).reduce((summary, key) => {
     // Total spent in this category
     const spent = activeTransactions
       .filter(t => t.category === key && t.type === 'expense')
       .reduce((sum, t) => sum + Number(t.amount || 0), 0);
 
     const limit = getCategoryBudget(key);
-    
+
     summary[key] = {
-      ...CATEGORIES[key],
+      ...allCategories[key],
       spent,
       limit,
       progress: limit > 0 ? (spent / limit) * 100 : 0
@@ -213,6 +223,14 @@ export function BudgetProvider({ children }) {
     toast.success('Paramètres enregistrés');
   };
 
+  // Add custom category
+  const addCustomCategory = async (category) => {
+    if (!userId) return;
+    const newCategories = [...(settings?.customCategories || []), category];
+    await fsSaveSettings(userId, { ...settings, customCategories: newCategories });
+    return category;
+  };
+
   // Clear month active data (delete transactions & budgets of active month)
   const clearMonthData = async () => {
     if (!userId) return;
@@ -243,11 +261,13 @@ export function BudgetProvider({ children }) {
     totalExpense,
     currentBalance,
     categorySpending,
+    allCategories,
     getCategoryBudget,
     addTransaction,
     removeTransaction,
     updateCategoryBudget,
     updateSettings,
+    addCustomCategory,
     clearMonthData
   };
 

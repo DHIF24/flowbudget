@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  Utensils, 
-  Car, 
-  Receipt, 
-  Gamepad2, 
-  Coins, 
+import {
+  X,
+  Utensils,
+  Car,
+  Receipt,
+  Gamepad2,
+  Coins,
   Layers,
   Coffee,
   Shirt,
   Wifi,
   Calendar,
-  Check
+  Check,
+  Plus,
+  Tag
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CATEGORY_LIST } from '../../constants/categories';
+import { CATEGORY_LIST, CATEGORIES } from '../../constants/categories';
 import { useBudget } from '../../context/BudgetContext';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -29,11 +31,12 @@ const IconMap = {
   Layers,
   Coffee,
   Shirt,
-  Wifi
+  Wifi,
+  Tag
 };
 
 export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense', activeMonth = null }) {
-  const { addTransaction, removeTransaction, settings } = useBudget();
+  const { addTransaction, removeTransaction, settings, allCategories, addCustomCategory } = useBudget();
   
   // Helper to get default date based on activeMonth
   const getDefaultDate = () => {
@@ -53,7 +56,17 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
   const [category, setCategory] = useState('food');
   const [date, setDate] = useState(() => getDefaultDate());
   const [note, setNote] = useState('');
-  
+
+  // New category state
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [selectedColor, setSelectedColor] = useState('#3B82F6');
+  const [showAddCategory, setShowAddCategory] = useState(false);
+
+  const categoryColors = [
+    '#3B82F6', '#EF4444', '#1D9E75', '#F59E0B', '#8B5CF6',
+    '#EC4899', '#06B6D4', '#A0522D', '#64748B', '#D85A30'
+  ];
+
   const [errors, setErrors] = useState({});
 
   // Reset or fill values when modal opens
@@ -235,7 +248,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                   Sélecteur de Catégorie
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {CATEGORY_LIST.map((cat) => {
+                  {Object.values(allCategories || CATEGORIES).map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
                     return (
@@ -271,7 +284,72 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                       </button>
                     );
                   })}
+                  {/* Add New Category Button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowAddCategory(!showAddCategory)}
+                    className={`
+                      flex flex-col items-center justify-center p-3 rounded-xl border border-dashed text-center relative transition-all duration-150 min-h-[70px]
+                      ${showAddCategory
+                        ? 'bg-[#534AB7]/10 border-[#534AB7] text-[#534AB7]'
+                        : 'bg-white dark:bg-zinc-950 border-slate-300 dark:border-zinc-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                      }
+                    `}
+                  >
+                    <div className="p-2 rounded-lg mb-1.5">
+                      <Plus className="h-5 w-5" />
+                    </div>
+                    <span className="text-[11px] font-medium truncate w-full px-0.5">
+                      {showAddCategory ? 'Annuler' : 'Nouvelle catégorie'}
+                    </span>
+                  </button>
                 </div>
+
+                {/* Add New Category Form */}
+                {showAddCategory && (
+                  <div className="mt-3 p-3 bg-slate-50 dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Nom de la catégorie"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-[#534AB7] focus:border-transparent"
+                    />
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {categoryColors.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => setSelectedColor(color)}
+                          className={`w-8 h-8 rounded-lg transition ${selectedColor === color ? 'ring-2 ring-offset-2 ring-slate-400' : ''}`}
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!newCategoryName.trim()) return;
+                        const newCategory = {
+                          id: `custom_${Date.now()}`,
+                          name: newCategoryName.trim(),
+                          color: selectedColor,
+                          icon: 'Tag',
+                          bgLight: 'bg-opacity-10',
+                          border: 'border-opacity-20'
+                        };
+                        await addCustomCategory(newCategory);
+                        setCategory(newCategory.id);
+                        setNewCategoryName('');
+                        setShowAddCategory(false);
+                      }}
+                      disabled={!newCategoryName.trim()}
+                      className="w-full py-2 bg-[#534AB7] text-white rounded-lg text-sm font-medium hover:bg-[#534AB7]/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Ajouter et sélectionner
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Notes TextArea */}
