@@ -63,7 +63,7 @@ export default function Stats() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-xs text-slate-400 dark:text-zinc-500 mb-1">شوف فلوسك وين راحت</p>
+          <p className="text-xs text-slate-400 dark:text-zinc-500 mb-1">شوف فلوسك وين مشات</p>
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
             حساباتي
           </h2>
@@ -124,7 +124,7 @@ export default function Stats() {
       {/* 2. Category Spending Second */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm">
         <h3 className="text-sm font-semibold text-slate-500 dark:text-zinc-400 mb-4">
-          وين راحت الفلوس 📊
+          وين مشات الفلوس 📊
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
