@@ -101,18 +101,13 @@ export default function Login() {
         {/* Footer info text links */}
         <p className="text-center text-xs text-slate-500 mt-6 font-sans">
           Vous n'avez pas de compte ?{' '}
-          <Link 
-            to="/register" 
+          <Link
+            to="/register"
             className="text-[#534AB7] font-semibold hover:underline"
           >
-            S'inscrire
+            أعمل كونت
           </Link>
         </p>
-
-        {/* Administrative Firebase alert note to assist compilation runtimes */}
-        <div className="mt-8 pt-4 border-t border-slate-100 dark:border-zinc-800/80 text-[10px] text-slate-400 dark:text-zinc-500 text-center leading-relaxed">
-          * Note: Pour utiliser la connexion par e-mail/mot de passe locale, assurez-vous qu'elle est activée dans votre Firebase Authentication console.
-        </div>
 
       </div>
     </div>
