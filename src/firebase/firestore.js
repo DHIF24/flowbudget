@@ -98,7 +98,8 @@ export async function saveSettings(userId, settings) {
   const payload = {
     currency: String(settings.currency || 'DT'),
     savingsGoal: Number(settings.savingsGoal || 0),
-    displayName: String(settings.displayName || '')
+    displayName: String(settings.displayName || ''),
+    customCategories: settings.customCategories || []
   };
 
   try {
