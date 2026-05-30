@@ -1,17 +1,19 @@
 import React from 'react';
-import { 
-  Utensils, 
-  Car, 
-  Receipt, 
-  Gamepad2, 
-  Coins, 
+import {
+  Utensils,
+  Car,
+  Receipt,
+  Gamepad2,
+  Coins,
   Layers,
   Coffee,
   Shirt,
   Wifi,
   Trash2,
-  Edit2
+  Edit2,
+  Tag
 } from 'lucide-react';
+import { useBudget } from '../../context/BudgetContext';
 import { CATEGORIES } from '../../constants/categories';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
@@ -25,18 +27,25 @@ const IconMap = {
   Layers,
   Coffee,
   Shirt,
-  Wifi
+  Wifi,
+  Tag
 };
 
-export default function TransactionItem({ 
-  transaction, 
-  currency = 'DT', 
-  onEdit, 
-  onDelete 
+export default function TransactionItem({
+  transaction,
+  currency = 'DT',
+  onEdit,
+  onDelete
 }) {
+  const { allCategories } = useBudget();
   const { title, amount, type, category, date, note } = transaction;
-  const currentCategory = CATEGORIES[category] || CATEGORIES.other;
-  const IconComponent = IconMap[currentCategory.icon] || Layers;
+  // Use allCategories (includes custom) with fallback to CATEGORIES
+  const currentCategory = allCategories?.[category] || CATEGORIES[category] || {
+    name: category,
+    icon: 'Tag',
+    color: '#64748B'
+  };
+  const IconComponent = IconMap[currentCategory.icon] || Tag;
 
   const isIncome = type === 'income';
 
