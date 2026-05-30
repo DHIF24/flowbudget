@@ -132,12 +132,12 @@ export default function Stats() {
           {Object.values(categorySpending)
             .filter((cat) => cat.spent > 0)
             .map((cat) => (
-              <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
-                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+              <div key={cat.id} className="flex items-center gap-4 p-4 sm:p-5 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
+                <span className="h-4 w-4 sm:h-5 sm:w-5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
                 <div className="min-w-0">
-                  <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
-                  <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
-                    <FormattedCurrency amount={cat.spent} currencyCode={settings.currency} decimalPlaces={3} className="text-sm font-bold" />
+                  <p className="text-sm sm:text-base text-slate-500 dark:text-zinc-400 truncate font-medium">{cat.name}</p>
+                  <p className="text-base sm:text-lg font-bold text-slate-800 dark:text-zinc-100 font-mono">
+                    <FormattedCurrency amount={cat.spent} currencyCode={settings.currency} decimalPlaces={3} className="text-base sm:text-lg font-bold" />
                   </p>
                 </div>
               </div>
