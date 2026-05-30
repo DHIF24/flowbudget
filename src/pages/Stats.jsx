@@ -9,6 +9,7 @@ import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
 import MonthPicker from '../components/ui/MonthPicker';
+import { FormattedCurrency } from '../components/ui/FormattedCurrency';
 
 export default function Stats() {
   const { 
@@ -105,7 +106,7 @@ export default function Stats() {
         {biggestExpense ? (
           <div className="space-y-2">
             <div className="text-3xl font-bold font-mono">
-              {formatCurrency(biggestExpense.amount, settings.currency, 0)}
+              <FormattedCurrency amount={biggestExpense.amount} currencyCode={settings.currency} decimalPlaces={3} className="text-3xl font-bold" />
             </div>
             <p className="text-base font-medium opacity-95">
               {biggestExpense.title}
@@ -136,7 +137,7 @@ export default function Stats() {
                 <div className="min-w-0">
                   <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
                   <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
-                    {formatCurrency(cat.spent, settings.currency, 0)}
+                    <FormattedCurrency amount={cat.spent} currencyCode={settings.currency} decimalPlaces={3} className="text-sm font-bold" />
                   </p>
                 </div>
               </div>
