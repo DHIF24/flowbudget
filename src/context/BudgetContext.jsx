@@ -176,12 +176,6 @@ export function BudgetProvider({ children }) {
       return;
     }
 
-    // Savings goal alert Check
-    const monthlySavings = currentBalance;
-    if (settings.savingsGoal > 0 && monthlySavings >= settings.savingsGoal) {
-      toast.success('🎉 Objectif d\'épargne atteint ce mois !', { id: 'savings-goal' });
-    }
-
     // Budget warning Checks
     Object.keys(categorySpending).forEach(key => {
       const cat = categorySpending[key];
