@@ -196,10 +196,10 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-lg bg-white dark:bg-zinc-900 rounded-t-2xl md:rounded-2xl shadow-xl z-50 flex flex-col overflow-hidden max-h-[85vh] md:max-h-[90vh]"
+            className="fixed bottom-0 md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-lg bg-white dark:bg-zinc-900 rounded-t-2xl md:rounded-2xl shadow-xl z-50 flex flex-col overflow-hidden max-h-[80vh] md:max-h-[600px]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-zinc-800">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-zinc-800">
               <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100">
                 {transactionToEdit ? 'Modifier la transaction' : 'Nouvelle transaction'}
               </h3>
@@ -212,7 +212,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
             </div>
 
             {/* Scrollable form body */}
-            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
+            <form onSubmit={handleSubmit} className="p-4 md:p-5 overflow-y-auto space-y-3 md:space-y-4">
               
               {/* Toggle Expense / Income */}
               <div>
@@ -258,10 +258,10 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
 
               {/* Category Grid */}
               <div>
-                <label className="text-xs font-semibold text-slate-500 mb-2 block uppercase tracking-wider font-mono">
+                <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wider font-mono">
                   Sélecteur de Catégorie
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {Object.values(mergedCategories).map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
@@ -271,7 +271,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                         type="button"
                         onClick={() => setCategory(cat.id)}
                         className={`
-                          flex flex-col items-center justify-center p-3 rounded-xl border text-center relative transition-all duration-150 group min-h-[70px] active:scale-95
+                          flex flex-col items-center justify-center p-2 rounded-xl border text-center relative transition-all duration-150 group min-h-[56px] active:scale-95
                           ${isSelected
                             ? 'bg-slate-50 dark:bg-zinc-800 scale-[1.02] ring-2 ring-[#534AB7]/20 border-[#534AB7]'
                             : 'bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
@@ -283,16 +283,16 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                             <Check className="h-3 w-3" />
                           </span>
                         )}
-                        <div 
-                          className="p-2 rounded-lg mb-1.5 transition-colors"
-                          style={{ 
+                        <div
+                          className="p-1.5 rounded-lg mb-1 transition-colors"
+                          style={{
                             backgroundColor: isSelected ? `${cat.color}20` : 'transparent',
                             color: cat.color
                           }}
                         >
-                          <IconComponent className="h-5 w-5" />
+                          <IconComponent className="h-4 w-4" />
                         </div>
-                        <span className="text-[11px] font-medium text-slate-700 dark:text-zinc-300 truncate w-full px-0.5">
+                        <span className="text-[10px] font-medium text-slate-700 dark:text-zinc-300 truncate w-full px-0.5">
                           {cat.name}
                         </span>
                       </button>
@@ -303,18 +303,18 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                     type="button"
                     onClick={() => setShowAddCategory(!showAddCategory)}
                     className={`
-                      flex flex-col items-center justify-center p-3 rounded-xl border border-dashed text-center relative transition-all duration-150 min-h-[70px]
+                      flex flex-col items-center justify-center p-2 rounded-xl border border-dashed text-center relative transition-all duration-150 min-h-[56px]
                       ${showAddCategory
                         ? 'bg-[#534AB7]/10 border-[#534AB7] text-[#534AB7]'
                         : 'bg-white dark:bg-zinc-950 border-slate-300 dark:border-zinc-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-zinc-800'
                       }
                     `}
                   >
-                    <div className="p-2 rounded-lg mb-1.5">
-                      <Plus className="h-5 w-5" />
+                    <div className="p-1.5 rounded-lg mb-1">
+                      <Plus className="h-4 w-4" />
                     </div>
-                    <span className="text-[11px] font-medium truncate w-full px-0.5">
-                      {showAddCategory ? 'Annuler' : 'Nouvelle catégorie'}
+                    <span className="text-[10px] font-medium truncate w-full px-0.5">
+                      {showAddCategory ? 'Annuler' : 'Nouvelle'}
                     </span>
                   </button>
                 </div>
@@ -372,22 +372,22 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
               </div>
 
               {/* Notes TextArea */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="tx-note" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                   Note (facultatif)
                 </label>
                 <textarea
                   id="tx-note"
-                  rows={2}
-                  placeholder="Ajouter des précisions, tags..."
+                  rows={1}
+                  placeholder="Ajouter des précisions..."
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-sm focus:outline-none focus:border-[#534AB7] focus:ring-1 focus:ring-[#534AB7] bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 placeholder-slate-400"
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 text-sm focus:outline-none focus:border-[#534AB7] focus:ring-1 focus:ring-[#534AB7] bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 placeholder-slate-400 resize-none"
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-3">
+              <div className="flex gap-3 pt-2">
                 <Button
                   variant="outline"
                   onClick={onClose}
