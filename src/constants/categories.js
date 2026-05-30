@@ -42,14 +42,6 @@ export const CATEGORIES = {
     bgLight: 'bg-teal-50 dark:bg-teal-950/20',
     border: 'border-teal-200 dark:border-teal-800'
   },
-  other: {
-    id: 'other',
-    name: 'Autre',
-    icon: 'Layers',
-    color: '#64748B', // Slate
-    bgLight: 'bg-slate-50 dark:bg-slate-950/20',
-    border: 'border-slate-200 dark:border-slate-800'
-  },
   cafe: {
     id: 'cafe',
     name: 'Café',
