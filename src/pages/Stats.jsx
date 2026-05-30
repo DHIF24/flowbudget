@@ -128,17 +128,19 @@ export default function Stats() {
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Object.values(categorySpending).map((cat) => (
-            <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
-              <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-              <div className="min-w-0">
-                <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
-                <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
-                  {formatCurrency(cat.spent, settings.currency)}
-                </p>
+          {Object.values(categorySpending)
+            .filter((cat) => cat.spent > 0)
+            .map((cat) => (
+              <div key={cat.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
+                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                <div className="min-w-0">
+                  <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{cat.name}</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-zinc-100 font-mono">
+                    {formatCurrency(cat.spent, settings.currency)}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
