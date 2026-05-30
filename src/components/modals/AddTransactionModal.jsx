@@ -61,6 +61,8 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
   const [newCategoryName, setNewCategoryName] = useState('');
   const [selectedColor, setSelectedColor] = useState('#3B82F6');
   const [showAddCategory, setShowAddCategory] = useState(false);
+  // Local optimistic custom categories that appear immediately
+  const [localCustomCategories, setLocalCustomCategories] = useState({});
 
   const categoryColors = [
     '#3B82F6', '#EF4444', '#1D9E75', '#F59E0B', '#8B5CF6',
@@ -68,6 +70,12 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
   ];
 
   const [errors, setErrors] = useState({});
+
+  // Merge context categories with local optimistic categories
+  const mergedCategories = {
+    ...(allCategories || CATEGORIES),
+    ...localCustomCategories
+  };
 
   // Reset or fill values when modal opens
   useEffect(() => {
@@ -99,6 +107,12 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
         setNote('');
       }
       setErrors({});
+    }
+    // Reset local custom categories when modal closes
+    if (!isOpen) {
+      setLocalCustomCategories({});
+      setShowAddCategory(false);
+      setNewCategoryName('');
     }
   }, [isOpen, transactionToEdit, defaultType, activeMonth]);
 
@@ -248,7 +262,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                   Sélecteur de Catégorie
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {Object.values(allCategories || CATEGORIES).map((cat) => {
+                  {Object.values(mergedCategories).map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
                     return (
@@ -338,8 +352,13 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                           bgLight: 'bg-opacity-10',
                           border: 'border-opacity-20'
                         };
-                        await addCustomCategory(newCategory);
+                        // Add to local state immediately for instant display
+                        setLocalCustomCategories(prev => ({ ...prev, [newCategory.id]: newCategory }));
+                        // Select the new category immediately
                         setCategory(newCategory.id);
+                        // Save to backend (async, doesn't block UI)
+                        addCustomCategory(newCategory);
+                        // Reset form
                         setNewCategoryName('');
                         setShowAddCategory(false);
                       }}
