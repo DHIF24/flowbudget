@@ -10,7 +10,8 @@ export function useSettings(userId) {
   const [settings, setSettings] = useState({
     currency: 'DT',
     savingsGoal: 200,
-    displayName: ''
+    displayName: '',
+    customCategories: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -29,13 +30,15 @@ export function useSettings(userId) {
         setSettings({
           currency: data.currency || 'DT',
           savingsGoal: Number(data.savingsGoal) || 0,
-          displayName: data.displayName || ''
+          displayName: data.displayName || '',
+          customCategories: data.customCategories || []
         });
       } else {
         setSettings({
           currency: 'DT',
           savingsGoal: 0,
-          displayName: ''
+          displayName: '',
+          customCategories: []
         });
       }
       setLoading(false);

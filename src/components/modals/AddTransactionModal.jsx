@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  Utensils, 
-  Car, 
-  Receipt, 
-  Gamepad2, 
-  Coins, 
+import {
+  X,
+  Utensils,
+  Car,
+  Receipt,
+  Gamepad2,
+  Coins,
   Layers,
   Coffee,
   Shirt,
   Wifi,
   Calendar,
-  Check
+  Check,
+  Tag
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CATEGORY_LIST } from '../../constants/categories';
+import { CATEGORY_LIST, CATEGORIES } from '../../constants/categories';
 import { useBudget } from '../../context/BudgetContext';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -29,11 +30,12 @@ const IconMap = {
   Layers,
   Coffee,
   Shirt,
-  Wifi
+  Wifi,
+  Tag
 };
 
 export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense', activeMonth = null }) {
-  const { addTransaction, removeTransaction, settings } = useBudget();
+  const { addTransaction, removeTransaction, settings, allCategories } = useBudget();
   
   // Helper to get default date based on activeMonth
   const getDefaultDate = () => {
@@ -235,7 +237,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                   Sélecteur de Catégorie
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {CATEGORY_LIST.map((cat) => {
+                  {Object.values(allCategories || CATEGORIES).map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
                     return (

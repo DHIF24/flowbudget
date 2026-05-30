@@ -6,7 +6,10 @@ import {
   ShieldAlert,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Plus,
+  Trash2,
+  Tag
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBudget } from '../context/BudgetContext';
@@ -17,7 +20,9 @@ export default function Settings() {
   const { user, logout, updatePassword } = useAuth();
   const {
     settings,
-    loading
+    loading,
+    addCustomCategory,
+    removeCustomCategory
   } = useBudget();
 
   // Profile State
@@ -29,6 +34,15 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+
+  // Custom Categories State
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [selectedColor, setSelectedColor] = useState('#3B82F6');
+
+  const categoryColors = [
+    '#3B82F6', '#EF4444', '#1D9E75', '#F59E0B', '#8B5CF6',
+    '#EC4899', '#06B6D4', '#A0522D', '#64748B', '#D85A30'
+  ];
 
   // Load display name from settings
   useEffect(() => {
@@ -230,6 +244,93 @@ export default function Settings() {
             Mettre à jour le mot de passe
           </Button>
         </form>
+      </section>
+
+      {/* Custom Categories Section */}
+      <section className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800">
+          <Tag className="w-5 h-5 text-[#534AB7]" />
+          <h2 className="uppercase tracking-wider text-xs font-mono font-semibold text-slate-500 dark:text-zinc-400">
+            Catégories personnalisées
+          </h2>
+        </div>
+
+        {/* Add New Category */}
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="Nom de la catégorie"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              className="flex-1 px-3 py-2 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-[#534AB7] focus:border-transparent"
+            />
+            <div className="flex items-center gap-2">
+              {categoryColors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  className={`w-8 h-8 rounded-lg transition ${selectedColor === color ? 'ring-2 ring-offset-2 ring-slate-400' : ''}`}
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={async () => {
+              if (!newCategoryName.trim()) {
+                toast.error('Veuillez entrer un nom de catégorie');
+                return;
+              }
+              const newCategory = {
+                id: `custom_${Date.now()}`,
+                name: newCategoryName.trim(),
+                color: selectedColor,
+                icon: 'Tag',
+                bgLight: `bg-opacity-10`,
+                border: `border-opacity-20`
+              };
+              await addCustomCategory(newCategory);
+              setNewCategoryName('');
+            }}
+            disabled={!newCategoryName.trim()}
+            className="w-full flex items-center justify-center gap-2 py-2 bg-[#534AB7] text-white rounded-lg text-sm font-medium hover:bg-[#534AB7]/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Plus className="w-4 h-4" />
+            Ajouter une catégorie
+          </button>
+        </div>
+
+        {/* List of Custom Categories */}
+        {settings?.customCategories?.length > 0 && (
+          <div className="space-y-2 pt-2">
+            <p className="text-xs text-slate-500">Vos catégories personnalisées :</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {settings.customCategories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="flex items-center justify-between p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="w-4 h-4 rounded-full"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <span className="text-sm font-medium text-slate-800 dark:text-zinc-100">
+                      {cat.name}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => removeCustomCategory(cat.id)}
+                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 3. Account controls module */}
