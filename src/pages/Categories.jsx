@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useBudget } from '../context/BudgetContext';
 import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
+import { FormattedCurrency } from '../components/ui/FormattedCurrency';
 import MonthPicker from '../components/ui/MonthPicker';
 import { 
   Utensils, 
@@ -113,7 +114,7 @@ export default function Categories() {
               </div>
               
               <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
-                {formatCurrency(spent, settings.currency)}
+                <FormattedCurrency amount={spent} currencyCode={settings.currency} decimalPlaces={3} className="text-2xl font-bold" />
               </div>
             </div>
           );
