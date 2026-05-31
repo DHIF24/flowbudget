@@ -17,7 +17,7 @@ export default function BalanceCard({
     <div className="bg-[#534AB7] rounded-2xl p-3 sm:p-6 text-white shadow-lg">
       {/* Balance Section */}
       <div className="text-center mb-3 sm:mb-4">
-        <p className="text-[#E0DDF7] text-[10px] sm:text-sm mb-1">شنوا فضلت</p>
+        <p className="text-[#E0DDF7] text-xs sm:text-base mb-1">شنوا فضلت</p>
         <div className={`text-xl sm:text-4xl font-bold ${isPositive ? 'text-white' : 'text-red-200'}`}>
           <FormattedCurrency amount={balance} currencyCode={currency} decimalPlaces={3} className="text-xl sm:text-4xl font-bold" />
         </div>
