@@ -227,7 +227,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                 <Input
                   label="Intitulé / Titre"
                   id="tx-title"
-                  placeholder="اسم المصروف او المدخول"
+                  placeholder={type === 'income' ? 'اكتب اسم المدخول' : 'اكتب اسم المصروف'}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   error={errors.title}
@@ -262,7 +262,16 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                   Sélecteur de Catégorie
                 </label>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                  {Object.values(mergedCategories).map((cat) => {
+                  {Object.values(mergedCategories)
+                    .filter((cat) => {
+                      // Filter categories based on transaction type
+                      if (type === 'income') {
+                        return cat.id === 'salary';
+                      } else {
+                        return cat.id !== 'salary';
+                      }
+                    })
+                    .map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
                     return (
