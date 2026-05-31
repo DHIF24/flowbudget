@@ -39,6 +39,7 @@ export default function Categories() {
   } = useBudget();
 
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
+  const [filterType, setFilterType] = useState('expense'); // 'income' or 'expense'
 
   const getFrenchMonthLabel = () => {
     const [year, month] = activeMonth.split('-');
@@ -59,8 +60,10 @@ export default function Categories() {
     );
   }
 
-  // All category keys to display
-  const categoryKeys = ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'internet', 'other'];
+  // All category keys to display based on filter
+  const categoryKeys = filterType === 'income' 
+    ? ['salary'] 
+    : ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'internet', 'other'];
 
   return (
     <div className="space-y-6 pb-20 md:pb-6 relative min-h-[85vh]">
@@ -70,6 +73,30 @@ export default function Categories() {
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 font-sans">
             المصاريف حسب الفئة
           </h2>
+        </div>
+
+        {/* Filter Toggle */}
+        <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-xl p-1">
+          <button
+            onClick={() => setFilterType('expense')}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              filterType === 'expense'
+                ? 'bg-white dark:bg-zinc-700 text-slate-900 dark:text-zinc-100 shadow-sm'
+                : 'text-slate-500 dark:text-zinc-400'
+            }`}
+          >
+            المصروف
+          </button>
+          <button
+            onClick={() => setFilterType('income')}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              filterType === 'income'
+                ? 'bg-white dark:bg-zinc-700 text-slate-900 dark:text-zinc-100 shadow-sm'
+                : 'text-slate-500 dark:text-zinc-400'
+            }`}
+          >
+            المداخيل
+          </button>
         </div>
 
         {/* Month Selector */}
