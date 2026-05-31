@@ -65,6 +65,9 @@ export default function Categories() {
     ? ['salary'] 
     : ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'internet', 'other'];
 
+  // Use categoryKeys directly
+  const displayKeys = categoryKeys;
+
   return (
     <div className="space-y-6 pb-20 md:pb-6 relative min-h-[85vh]">
       {/* Page Header */}
@@ -116,7 +119,7 @@ export default function Categories() {
 
       {/* Category Cards Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-        {categoryKeys.map((key) => {
+        {displayKeys.map((key) => {
           const cat = categorySpending[key];
           if (!cat) return null;
 
