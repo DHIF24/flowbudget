@@ -121,7 +121,7 @@ export default function Categories() {
           if (!cat) return null;
 
           const IconComponent = iconMap[cat.icon] || Layers;
-          const spent = cat.spent || 0;
+          const amount = filterType === 'income' ? (cat.income || 0) : (cat.spent || 0);
 
           return (
             <div 
@@ -141,7 +141,7 @@ export default function Categories() {
               </div>
               
               <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100 font-mono">
-                <FormattedCurrency amount={spent} currencyCode={settings.currency} decimalPlaces={3} className="text-2xl font-bold" />
+                <FormattedCurrency amount={amount} currencyCode={settings.currency} decimalPlaces={3} className="text-2xl font-bold" />
               </div>
             </div>
           );

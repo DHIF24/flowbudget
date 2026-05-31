@@ -150,9 +150,14 @@ export function BudgetProvider({ children }) {
 
   // Category summary for spending bars
   const categorySpending = Object.keys(allCategories).reduce((summary, key) => {
-    // Total spent in this category
+    // Total spent in this category (expenses)
     const spent = activeTransactions
       .filter(t => t.category === key && t.type === 'expense')
+      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+    // Total income in this category
+    const income = activeTransactions
+      .filter(t => t.category === key && t.type === 'income')
       .reduce((sum, t) => sum + Number(t.amount || 0), 0);
 
     const limit = getCategoryBudget(key);
@@ -160,6 +165,7 @@ export function BudgetProvider({ children }) {
     summary[key] = {
       ...allCategories[key],
       spent,
+      income,
       limit,
       progress: limit > 0 ? (spent / limit) * 100 : 0
     };
