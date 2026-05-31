@@ -61,12 +61,22 @@ export default function Categories() {
   }
 
   // All category keys to display based on filter
-  const categoryKeys = filterType === 'income' 
+  const baseCategoryKeys = filterType === 'income' 
     ? ['salary'] 
     : ['food', 'transport', 'bills', 'entertainment', 'cafe', 'clothes', 'internet', 'other'];
 
-  // Use categoryKeys directly
-  const displayKeys = categoryKeys;
+  // Add custom categories that match the filter type
+  const allCategoryKeys = Object.keys(categorySpending);
+  const customIncomeKeys = allCategoryKeys.filter(key => categorySpending[key]?.type === 'income');
+  const customExpenseKeys = allCategoryKeys.filter(key => {
+    const cat = categorySpending[key];
+    return cat?.type === 'expense' || (cat?.type !== 'income' && key !== 'salary' && !baseCategoryKeys.includes(key));
+  });
+
+  // Combine base categories with custom categories
+  const displayKeys = filterType === 'income'
+    ? [...baseCategoryKeys, ...customIncomeKeys]
+    : [...baseCategoryKeys, ...customExpenseKeys];
 
   return (
     <div className="space-y-6 pb-20 md:pb-6 relative min-h-[85vh]">

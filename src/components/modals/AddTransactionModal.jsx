@@ -266,9 +266,11 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                     .filter((cat) => {
                       // Filter categories based on transaction type
                       if (type === 'income') {
-                        return cat.id === 'salary';
+                        // Income mode: show only salary and custom categories with type='income'
+                        return cat.id === 'salary' || cat.type === 'income';
                       } else {
-                        return cat.id !== 'salary';
+                        // Expense mode: show all except salary and custom categories with type='income'
+                        return cat.id !== 'salary' && cat.type !== 'income';
                       }
                     })
                     .map((cat) => {
@@ -358,6 +360,7 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                           name: newCategoryName.trim(),
                           color: selectedColor,
                           icon: 'Tag',
+                          type: type, // 'income' or 'expense'
                           bgLight: 'bg-opacity-10',
                           border: 'border-opacity-20'
                         };
