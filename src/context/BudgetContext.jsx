@@ -231,6 +231,26 @@ export function BudgetProvider({ children }) {
     return category;
   };
 
+  // Update custom category
+  const updateCustomCategory = async (categoryId, updates) => {
+    if (!userId) return;
+    const currentCategories = settings?.customCategories || [];
+    const updatedCategories = currentCategories.map(cat =>
+      cat.id === categoryId ? { ...cat, ...updates } : cat
+    );
+    await fsSaveSettings(userId, { ...settings, customCategories: updatedCategories });
+    toast.success('Catégorie mise à jour');
+  };
+
+  // Delete custom category
+  const deleteCustomCategory = async (categoryId) => {
+    if (!userId) return;
+    const currentCategories = settings?.customCategories || [];
+    const filteredCategories = currentCategories.filter(cat => cat.id !== categoryId);
+    await fsSaveSettings(userId, { ...settings, customCategories: filteredCategories });
+    toast.success('Catégorie supprimée');
+  };
+
   // Clear month active data (delete transactions & budgets of active month)
   const clearMonthData = async () => {
     if (!userId) return;
@@ -268,6 +288,8 @@ export function BudgetProvider({ children }) {
     updateCategoryBudget,
     updateSettings,
     addCustomCategory,
+    updateCustomCategory,
+    deleteCustomCategory,
     clearMonthData
   };
 

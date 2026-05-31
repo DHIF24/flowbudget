@@ -36,7 +36,7 @@ const IconMap = {
 };
 
 export default function AddTransactionModal({ isOpen, onClose, transactionToEdit = null, defaultType = 'expense', activeMonth = null }) {
-  const { addTransaction, removeTransaction, settings, allCategories, addCustomCategory } = useBudget();
+  const { addTransaction, removeTransaction, settings, allCategories, addCustomCategory, updateCustomCategory, deleteCustomCategory } = useBudget();
   
   // Helper to get default date based on activeMonth
   const getDefaultDate = () => {
@@ -63,6 +63,10 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
   const [showAddCategory, setShowAddCategory] = useState(false);
   // Local optimistic custom categories that appear immediately
   const [localCustomCategories, setLocalCustomCategories] = useState({});
+  // Edit category state
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editCategoryName, setEditCategoryName] = useState('');
+  const [editCategoryColor, setEditCategoryColor] = useState('#3B82F6');
 
   const categoryColors = [
     '#3B82F6', '#EF4444', '#1D9E75', '#F59E0B', '#8B5CF6',
@@ -113,6 +117,9 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
       setLocalCustomCategories({});
       setShowAddCategory(false);
       setNewCategoryName('');
+      setEditingCategory(null);
+      setEditCategoryName('');
+      setEditCategoryColor('#3B82F6');
     }
   }, [isOpen, transactionToEdit, defaultType, activeMonth]);
 
@@ -276,37 +283,81 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                     .map((cat) => {
                     const IconComponent = IconMap[cat.icon] || Layers;
                     const isSelected = category === cat.id;
+                    const isCustom = cat.id?.startsWith('custom_');
                     return (
-                      <button
-                        key={cat.id}
-                        type="button"
-                        onClick={() => setCategory(cat.id)}
-                        className={`
-                          flex flex-col items-center justify-center p-2 rounded-xl border text-center relative transition-all duration-150 group min-h-[56px] active:scale-95
-                          ${isSelected
-                            ? 'bg-slate-50 dark:bg-zinc-800 scale-[1.02] ring-2 ring-[#534AB7]/20 border-[#534AB7]'
-                            : 'bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
-                          }
-                        `}
-                      >
-                        {isSelected && (
-                          <span className="absolute top-1.5 right-1.5 bg-[#534AB7] text-white p-0.5 rounded-full">
-                            <Check className="h-3 w-3" />
-                          </span>
-                        )}
-                        <div
-                          className="p-1.5 rounded-lg mb-1 transition-colors"
-                          style={{
-                            backgroundColor: isSelected ? `${cat.color}20` : 'transparent',
-                            color: cat.color
-                          }}
+                      <div key={cat.id} className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setCategory(cat.id)}
+                          className={`
+                            w-full flex flex-col items-center justify-center p-2 rounded-xl border text-center relative transition-all duration-150 group min-h-[56px] active:scale-95
+                            ${isSelected
+                              ? 'bg-slate-50 dark:bg-zinc-800 scale-[1.02] ring-2 ring-[#534AB7]/20 border-[#534AB7]'
+                              : 'bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
+                            }
+                          `}
                         >
-                          <IconComponent className="h-4 w-4" />
-                        </div>
-                        <span className="text-[10px] font-medium text-slate-700 dark:text-zinc-300 truncate w-full px-0.5">
-                          {cat.name}
-                        </span>
-                      </button>
+                          {isSelected && (
+                            <span className="absolute top-1.5 right-1.5 bg-[#534AB7] text-white p-0.5 rounded-full">
+                              <Check className="h-3 w-3" />
+                            </span>
+                          )}
+                          <div
+                            className="p-1.5 rounded-lg mb-1 transition-colors"
+                            style={{
+                              backgroundColor: isSelected ? `${cat.color}20` : 'transparent',
+                              color: cat.color
+                            }}
+                          >
+                            <IconComponent className="h-4 w-4" />
+                          </div>
+                          <span className="text-[10px] font-medium text-slate-700 dark:text-zinc-300 truncate w-full px-0.5">
+                            {cat.name}
+                          </span>
+                        </button>
+                        {/* Edit/Delete buttons for custom categories */}
+                        {isCustom && !isSelected && (
+                          <div className="absolute -top-1 -right-1 flex gap-0.5">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingCategory(cat);
+                                setEditCategoryName(cat.name);
+                                setEditCategoryColor(cat.color);
+                              }}
+                              className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+                            >
+                              <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (confirm('Supprimer cette catégorie ?')) {
+                                  await deleteCustomCategory(cat.id);
+                                  // Remove from local state
+                                  setLocalCustomCategories(prev => {
+                                    const { [cat.id]: _, ...rest } = prev;
+                                    return rest;
+                                  });
+                                  // Reset category if it was selected
+                                  if (category === cat.id) {
+                                    setCategory(type === 'income' ? 'salary' : 'food');
+                                  }
+                                }
+                              }}
+                              className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                            >
+                              <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                   {/* Add New Category Button */}
@@ -329,6 +380,69 @@ export default function AddTransactionModal({ isOpen, onClose, transactionToEdit
                     </span>
                   </button>
                 </div>
+
+                {/* Edit Category Form */}
+                {editingCategory && (
+                  <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">Modifier la catégorie</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingCategory(null);
+                          setEditCategoryName('');
+                          setEditCategoryColor('#3B82F6');
+                        }}
+                        className="p-1 text-blue-500 hover:text-blue-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Nom de la catégorie"
+                      value={editCategoryName}
+                      onChange={(e) => setEditCategoryName(e.target.value)}
+                      className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg text-sm text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {categoryColors.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => setEditCategoryColor(color)}
+                          className={`w-8 h-8 rounded-lg transition ${editCategoryColor === color ? 'ring-2 ring-offset-2 ring-blue-400' : ''}`}
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!editCategoryName.trim()) return;
+                        const updates = {
+                          name: editCategoryName.trim(),
+                          color: editCategoryColor
+                        };
+                        // Update local state immediately
+                        setLocalCustomCategories(prev => ({
+                          ...prev,
+                          [editingCategory.id]: { ...prev[editingCategory.id], ...updates }
+                        }));
+                        // Save to backend
+                        await updateCustomCategory(editingCategory.id, updates);
+                        // Reset form
+                        setEditingCategory(null);
+                        setEditCategoryName('');
+                        setEditCategoryColor('#3B82F6');
+                      }}
+                      disabled={!editCategoryName.trim()}
+                      className="w-full py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Enregistrer les modifications
+                    </button>
+                  </div>
+                )}
 
                 {/* Add New Category Form */}
                 {showAddCategory && (
