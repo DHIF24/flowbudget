@@ -10,6 +10,7 @@ import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
 import MonthPicker from '../components/ui/MonthPicker';
 import { FormattedCurrency } from '../components/ui/FormattedCurrency';
+import CategoryDetailsModal from '../components/modals/CategoryDetailsModal';
 
 export default function Stats() {
   const { 
@@ -22,6 +23,8 @@ export default function Stats() {
   } = useBudget();
 
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   // 1. Month Navigation Handler
   const handlePrevMonth = () => {
@@ -50,6 +53,16 @@ export default function Stats() {
     const [year, month] = activeMonth.split('-');
     const date = new Date(year, parseInt(month) - 1, 15);
     return formatDate(date, 'MMMM yyyy');
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setIsCategoryModalOpen(true);
+  };
+
+  const handleCloseCategoryModal = () => {
+    setIsCategoryModalOpen(false);
+    setSelectedCategory(null);
   };
 
   // 2. Find Greatest Expense of the Active Month
@@ -132,7 +145,11 @@ export default function Stats() {
           {Object.values(categorySpending)
             .filter((cat) => cat.spent > 0)
             .map((cat) => (
-              <div key={cat.id} className="flex items-center gap-4 p-4 sm:p-5 bg-slate-50 dark:bg-zinc-800/50 rounded-xl">
+              <div 
+                key={cat.id} 
+                className="flex items-center gap-4 p-4 sm:p-5 bg-slate-50 dark:bg-zinc-800/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
+                onClick={() => handleCategoryClick(cat)}
+              >
                 <span className="h-4 w-4 sm:h-5 sm:w-5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
                 <div className="min-w-0">
                   <p className="text-sm sm:text-base text-slate-500 dark:text-zinc-400 truncate font-medium">{cat.name}</p>
@@ -151,6 +168,15 @@ export default function Stats() {
         onClose={() => setIsMonthPickerOpen(false)}
         activeMonth={activeMonth}
         onChange={setActiveMonth}
+      />
+
+      {/* CATEGORY DETAILS MODAL */}
+      <CategoryDetailsModal
+        isOpen={isCategoryModalOpen}
+        onClose={handleCloseCategoryModal}
+        category={selectedCategory}
+        transactions={activeTransactions}
+        currency={settings.currency}
       />
 
     </div>
